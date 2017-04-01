@@ -101,6 +101,8 @@ class AddPaymentViewController: UITableViewController {
         if availableParents.count > 0 {
             parentPaymentNameLabel.text = availableParents[0]
         }
+        
+        navigationItem.backBarButtonItem?.title = "Back".localized
     }
     
     @IBAction func nameDidChange(_ sender: UITextField) {
@@ -120,17 +122,21 @@ class AddPaymentViewController: UITableViewController {
             self?.picker?.removeFromParentViewController()
         }
         
-        picker.view.bounds = CGRect(x: 0, y: 0, width: 150.0, height: 200.0)
-        picker.view.center = view.center
-        picker.view.center.y -= navigationController?.navigationBar.frame.size.height ?? 0.0
+        //picker.view.center.y = UIScreen.main.bounds.size.height / 2
+//        picker.view.frame.origin.y = 0.0
+            //picker.view.center.y -= navigationController?.navigationBar.frame.size.height ?? 0.0
         
-        addChildViewController(picker)
-        view.addSubview(picker.view)
-        picker.view.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
-        UIView.animate(withDuration: 0.1) {
-            picker.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        if let parentViewController = UIApplication.shared.keyWindow?.rootViewController {
+            
+            picker.willMove(toParentViewController: parentViewController)
+            picker.beginAppearanceTransition(true, animated: true)
+            parentViewController.view.addSubview(picker.view)
+            picker.endAppearanceTransition()
+            parentViewController.addChildViewController(picker)
+            picker.didMove(toParentViewController: parentViewController)
+            
+            parentViewController.view.bringSubview(toFront: picker.view)
         }
-        picker.didMove(toParentViewController: self)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -30,7 +30,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IwT-um-A5f" id="rNY-n4-4pj">
-                                            <rect key="frame" x="0.0" y="0.0" width="308" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="308" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DnT-L5-nfP">
@@ -260,53 +260,64 @@
                         <viewControllerLayoutGuide type="top" id="zXU-J9-Hav"/>
                         <viewControllerLayoutGuide type="bottom" id="svg-pd-bTM"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="7yy-c5-CfC">
-                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="7yy-c5-CfC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view alpha="0.90000000000000002" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lLS-76-ctO">
-                                <rect key="frame" x="1" y="1" width="148" height="198"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <view userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZUl-hg-dUq">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <pickerView contentMode="scaleToFill" horizontalHuggingPriority="800" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="VLo-os-xiF">
-                                <rect key="frame" x="16" y="28" width="118" height="126"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YZ7-SH-u8u">
-                                <rect key="frame" x="16" y="162" width="118" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ytb-XK-Z9C">
+                                <rect key="frame" x="62.5" y="183.5" width="250" height="300"/>
+                                <subviews>
+                                    <pickerView contentMode="scaleToFill" horizontalHuggingPriority="800" verticalHuggingPriority="800" horizontalCompressionResistancePriority="100" verticalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="VLo-os-xiF">
+                                        <rect key="frame" x="8" y="8" width="234" height="246"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </pickerView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YZ7-SH-u8u">
+                                        <rect key="frame" x="8" y="262" width="234" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ve0-Sv-3bo"/>
+                                        </constraints>
+                                        <state key="normal" title="Choose"/>
+                                        <connections>
+                                            <action selector="okTapped:" destination="Ht8-sm-3kt" eventType="touchUpInside" id="wIE-EI-TiB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="C4h-eA-IAX"/>
+                                    <constraint firstItem="YZ7-SH-u8u" firstAttribute="top" secondItem="VLo-os-xiF" secondAttribute="bottom" constant="8" id="Dkk-uz-ZtZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="YZ7-SH-u8u" secondAttribute="trailing" constant="8" id="ELa-9e-Cam"/>
+                                    <constraint firstAttribute="width" constant="250" id="L4g-XO-FBI"/>
+                                    <constraint firstItem="VLo-os-xiF" firstAttribute="leading" secondItem="ytb-XK-Z9C" secondAttribute="leading" constant="8" id="TBO-U2-3pL"/>
+                                    <constraint firstItem="YZ7-SH-u8u" firstAttribute="leading" secondItem="ytb-XK-Z9C" secondAttribute="leading" constant="8" id="Xr3-YP-Yfy"/>
+                                    <constraint firstAttribute="trailing" secondItem="VLo-os-xiF" secondAttribute="trailing" constant="8" id="bty-gc-BoT"/>
+                                    <constraint firstItem="VLo-os-xiF" firstAttribute="top" secondItem="ytb-XK-Z9C" secondAttribute="top" constant="8" id="exw-7d-6SG"/>
+                                    <constraint firstAttribute="bottom" secondItem="YZ7-SH-u8u" secondAttribute="bottom" constant="8" id="gJu-dp-R2F"/>
+                                    <constraint firstAttribute="height" constant="300" id="kLr-YJ-85s"/>
                                 </constraints>
-                                <state key="normal" title="OK">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="okTapped:" destination="Ht8-sm-3kt" eventType="touchUpInside" id="wIE-EI-TiB"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="svg-pd-bTM" firstAttribute="top" secondItem="YZ7-SH-u8u" secondAttribute="bottom" constant="8" id="2ww-bz-MBI"/>
-                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="leading" secondItem="7yy-c5-CfC" secondAttribute="leadingMargin" id="7OI-Sk-GHj"/>
-                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="top" secondItem="VLo-os-xiF" secondAttribute="bottom" constant="8" id="RU4-yr-rIW"/>
-                            <constraint firstItem="VLo-os-xiF" firstAttribute="top" secondItem="zXU-J9-Hav" secondAttribute="bottom" constant="8" id="Y7d-gE-5xB"/>
-                            <constraint firstItem="VLo-os-xiF" firstAttribute="leading" secondItem="7yy-c5-CfC" secondAttribute="leadingMargin" id="b0M-AA-HCJ"/>
-                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="trailing" secondItem="7yy-c5-CfC" secondAttribute="trailingMargin" id="iLC-6d-ez1"/>
-                            <constraint firstItem="VLo-os-xiF" firstAttribute="trailing" secondItem="7yy-c5-CfC" secondAttribute="trailingMargin" id="oK6-Ls-Xnu"/>
+                            <constraint firstAttribute="trailing" secondItem="ZUl-hg-dUq" secondAttribute="trailing" id="0aY-eP-Ljb"/>
+                            <constraint firstItem="ZUl-hg-dUq" firstAttribute="leading" secondItem="7yy-c5-CfC" secondAttribute="leading" id="GPU-1z-Dl7"/>
+                            <constraint firstItem="ytb-XK-Z9C" firstAttribute="centerX" secondItem="7yy-c5-CfC" secondAttribute="centerX" id="Pjq-Gw-gQH"/>
+                            <constraint firstItem="svg-pd-bTM" firstAttribute="top" secondItem="ZUl-hg-dUq" secondAttribute="bottom" id="QBF-wl-9TE"/>
+                            <constraint firstItem="ytb-XK-Z9C" firstAttribute="centerY" secondItem="7yy-c5-CfC" secondAttribute="centerY" id="jim-FY-ssC"/>
+                            <constraint firstItem="ZUl-hg-dUq" firstAttribute="top" secondItem="7yy-c5-CfC" secondAttribute="top" id="zlr-46-nLg"/>
                         </constraints>
                     </view>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="150" height="200"/>
                     <connections>
-                        <outlet property="backgroundView" destination="lLS-76-ctO" id="jd4-JV-uwO"/>
                         <outlet property="picker" destination="VLo-os-xiF" id="Yld-Se-sJ0"/>
+                        <outlet property="pickerView" destination="ytb-XK-Z9C" id="Kc7-sz-stc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sRk-S1-vxs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1716.8" y="783.50824587706154"/>
+            <point key="canvasLocation" x="1716" y="783.05847076461771"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="b4U-oH-m96">

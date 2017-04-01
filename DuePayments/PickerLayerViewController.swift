@@ -10,20 +10,34 @@ import Foundation
 import UIKit
 
 class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-    @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet weak var pickerView: UIView!
     
     var options: [String] = []
     var callback: ((Int, String) -> ())?
     
     @IBOutlet weak var picker: UIPickerView!
     
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        print("tapped")
+//    }
+    
     override func viewDidLoad() {
         picker.dataSource = self
         picker.delegate = self
         
-        backgroundView.layer.borderColor = UIColor.darkGray.cgColor
-        backgroundView.layer.borderWidth = 1.0
-        backgroundView.layer.cornerRadius = 14.0
+        pickerView.layer.borderColor = UIColor.darkGray.cgColor
+        pickerView.layer.borderWidth = 1.0
+        pickerView.layer.cornerRadius = 14.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        pickerView.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        UIView.animate(withDuration: 0.1) { [weak self] in
+            self?.pickerView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
