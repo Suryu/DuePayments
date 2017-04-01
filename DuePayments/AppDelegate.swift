@@ -43,3 +43,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+
+extension UIApplication {
+    static func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in alertController.dismiss(animated: true, completion: nil) }))
+        UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+    }
+    
+    static func showAlert(error: String) {
+        showAlert(title: "Error".localized, message: error)
+    }
+}

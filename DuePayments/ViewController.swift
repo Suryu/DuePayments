@@ -50,7 +50,7 @@ class PaymentsTableViewController: UIViewController {
     }
     
     func refresh(_ sender:AnyObject) {
-        fetchPayments()
+        fetchPayments(showIndicator: false)
     }
 
 }
@@ -150,13 +150,18 @@ extension PaymentsTableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func fetchPayments() {
-        activityIndicator.startAnimating()
-        Payments.shared.download() { [weak self] in
+    func fetchPayments(showIndicator: Bool = true) {
+        if showIndicator {
+            activityIndicator.startAnimating()
+        }
+        
+        Payments.shared.download() { [weak self] success in
             
             self?.activityIndicator.stopAnimating()
             self?.refreshControl.endRefreshing()
-            self?.paymentsUpdated(upload: false)
+            if success {
+                self?.paymentsUpdated(upload: false)
+            }
         }
     }
     
@@ -175,8 +180,12 @@ extension PaymentsTableViewController {
         if upload {
             startBlockingTask()
             
-            Payments.shared.upload() { [weak self] in
+            Payments.shared.upload() { [weak self] success in
                 self?.stopBlockingTask()
+                
+                guard success == true else {
+                    return
+                }
                 
                 if let payment = self?.payment,
                     payment.payments.count == 0,
@@ -249,7 +258,7 @@ extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSourc
         cell.nameLabel.text = currentPayment.name
         
         let totalValue = currentPayment.totalValue
-        if totalValue > 0 {
+        if totalValue != 0 {
             cell.priceLabel.text = totalValue.toCurrencyString(localeIdentifier: "pl_PL")
         } else {
             cell.priceLabel.text = ""

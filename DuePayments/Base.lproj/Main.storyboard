@@ -191,18 +191,28 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="G8y-NO-p0x">
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="G8y-NO-p0x">
                                                     <rect key="frame" x="8" y="0.0" width="359" height="43.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" horizontalCompressionResistancePriority="200" text="Subpayment for" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0NE-DV-Fkm">
-                                                            <rect key="frame" x="0.0" y="0.0" width="122.5" height="43.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="255.5" height="43.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <pickerView contentMode="scaleToFill" horizontalHuggingPriority="800" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="vpM-AO-d5c">
-                                                            <rect key="frame" x="146.5" y="0.0" width="212.5" height="43.5"/>
-                                                        </pickerView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="None" textAlignment="right" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Fwo-d4-ngk">
+                                                            <rect key="frame" x="263.5" y="0.0" width="34.5" height="43.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccm-6b-ygb">
+                                                            <rect key="frame" x="306" y="0.0" width="53" height="43.5"/>
+                                                            <state key="normal" title="Choose"/>
+                                                            <connections>
+                                                                <action selector="chooseParentPaymentTap:" destination="oqB-0o-4Yk" eventType="touchUpInside" id="phB-v9-2LK"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
@@ -233,7 +243,7 @@
                         <outlet property="currencyPicker" destination="JJH-50-k7A" id="ums-Ys-p98"/>
                         <outlet property="doneButton" destination="qgK-Th-dz2" id="YMX-dj-FuK"/>
                         <outlet property="nameTextField" destination="pJe-Er-kOH" id="Z5i-ko-SmG"/>
-                        <outlet property="parentPaymentPicker" destination="vpM-AO-d5c" id="45v-33-e2A"/>
+                        <outlet property="parentPaymentNameLabel" destination="Fwo-d4-ngk" id="hwU-mG-fd8"/>
                         <outlet property="priceCell" destination="sf5-4V-PnY" id="xLY-rS-seZ"/>
                         <outlet property="priceTextField" destination="9bR-b9-vq1" id="xxa-yI-txV"/>
                     </connections>
@@ -242,25 +252,61 @@
             </objects>
             <point key="canvasLocation" x="1717.5999999999999" y="122.78860569715144"/>
         </scene>
-        <!--View Controller-->
+        <!--Picker Layer View Controller-->
         <scene sceneID="PW9-t8-O8i">
             <objects>
-                <viewController id="Ht8-sm-3kt" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="pickerLayer" id="Ht8-sm-3kt" customClass="PickerLayerViewController" customModule="DuePayments" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zXU-J9-Hav"/>
                         <viewControllerLayoutGuide type="bottom" id="svg-pd-bTM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7yy-c5-CfC">
-                        <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view alpha="0.90000000000000002" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lLS-76-ctO">
+                                <rect key="frame" x="1" y="1" width="148" height="198"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <pickerView contentMode="scaleToFill" horizontalHuggingPriority="800" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="VLo-os-xiF">
+                                <rect key="frame" x="16" y="28" width="118" height="126"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YZ7-SH-u8u">
+                                <rect key="frame" x="16" y="162" width="118" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="C4h-eA-IAX"/>
+                                </constraints>
+                                <state key="normal" title="OK">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="okTapped:" destination="Ht8-sm-3kt" eventType="touchUpInside" id="wIE-EI-TiB"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="svg-pd-bTM" firstAttribute="top" secondItem="YZ7-SH-u8u" secondAttribute="bottom" constant="8" id="2ww-bz-MBI"/>
+                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="leading" secondItem="7yy-c5-CfC" secondAttribute="leadingMargin" id="7OI-Sk-GHj"/>
+                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="top" secondItem="VLo-os-xiF" secondAttribute="bottom" constant="8" id="RU4-yr-rIW"/>
+                            <constraint firstItem="VLo-os-xiF" firstAttribute="top" secondItem="zXU-J9-Hav" secondAttribute="bottom" constant="8" id="Y7d-gE-5xB"/>
+                            <constraint firstItem="VLo-os-xiF" firstAttribute="leading" secondItem="7yy-c5-CfC" secondAttribute="leadingMargin" id="b0M-AA-HCJ"/>
+                            <constraint firstItem="YZ7-SH-u8u" firstAttribute="trailing" secondItem="7yy-c5-CfC" secondAttribute="trailingMargin" id="iLC-6d-ez1"/>
+                            <constraint firstItem="VLo-os-xiF" firstAttribute="trailing" secondItem="7yy-c5-CfC" secondAttribute="trailingMargin" id="oK6-Ls-Xnu"/>
+                        </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="200" height="300"/>
+                    <size key="freeformSize" width="150" height="200"/>
+                    <connections>
+                        <outlet property="backgroundView" destination="lLS-76-ctO" id="jd4-JV-uwO"/>
+                        <outlet property="picker" destination="VLo-os-xiF" id="Yld-Se-sJ0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sRk-S1-vxs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1718" y="784"/>
+            <point key="canvasLocation" x="1716.8" y="783.50824587706154"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="b4U-oH-m96">

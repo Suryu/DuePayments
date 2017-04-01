@@ -47,6 +47,8 @@ class AddPaymentViewController: UITableViewController {
         }
         return parents
     }
+    var currentParentRow = 0
+    var picker: PickerLayerViewController?
     
     var hasSubpayments: Bool {
         return editedPayment.payments.count > 0
@@ -68,14 +70,11 @@ class AddPaymentViewController: UITableViewController {
     @IBOutlet weak var priceTextField: UITextField!
     @IBOutlet weak var currencyPicker: UIPickerView!
     @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var parentPaymentPicker: UIPickerView!
+    @IBOutlet weak var parentPaymentNameLabel: UILabel!
     
     override func viewDidLoad() {
         currencyPicker.dataSource = currencyPickerDelegate
         currencyPicker.delegate = currencyPickerDelegate
-        
-        parentPaymentPicker.dataSource = self
-        parentPaymentPicker.delegate = self
         
         nameTextField.delegate = self
         priceTextField.delegate = self
@@ -97,10 +96,41 @@ class AddPaymentViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         doneButton.isEnabled = validate()
+        picker = PickerLayerViewController.instantiate(storyboard: "Main", identifier: "pickerLayer")
+        
+        if availableParents.count > 0 {
+            parentPaymentNameLabel.text = availableParents[0]
+        }
     }
     
     @IBAction func nameDidChange(_ sender: UITextField) {
         doneButton.isEnabled = validate()
+    }
+    
+    @IBAction func chooseParentPaymentTap(_ sender: UIButton) {
+        guard let picker = picker else {
+            return
+        }
+        
+        picker.options = availableParents
+        picker.callback = { [weak self] index, option in
+            self?.currentParentRow = index
+            self?.parentPaymentNameLabel.text = self?.availableParents[index]
+            self?.picker?.view.removeFromSuperview()
+            self?.picker?.removeFromParentViewController()
+        }
+        
+        picker.view.bounds = CGRect(x: 0, y: 0, width: 150.0, height: 200.0)
+        picker.view.center = view.center
+        picker.view.center.y -= navigationController?.navigationBar.frame.size.height ?? 0.0
+        
+        addChildViewController(picker)
+        view.addSubview(picker.view)
+        picker.view.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+        UIView.animate(withDuration: 0.1) {
+            picker.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }
+        picker.didMove(toParentViewController: self)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -109,6 +139,14 @@ class AddPaymentViewController: UITableViewController {
         } else {
             return CGFloat(AddPaymentViewController.DefaultRowHeight)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var result = "Details".localized
+        if initialName != "" {
+            result += " (\(initialName))"
+        }
+        return result
     }
 }
 
@@ -152,12 +190,11 @@ extension AddPaymentViewController {
         editedPayment.name = nameTextField.text ?? ""
         editedPayment.value = priceTextField.text?.toPriceValue() ?? 0.0
         
-        let parentRow = parentPaymentPicker.selectedRow(inComponent: 0)
-        if (parentRow != 0) {
-            if actionType == .edit && parentRow == 1 && path.count > 0 {
+        if (currentParentRow != 0) {
+            if actionType == .edit && currentParentRow == 1 && path.count > 0 {
                 childPath.removeLast()
             } else {
-                childPath.append(availableParents[parentRow])
+                childPath.append(availableParents[currentParentRow])
             }
         }
         
@@ -187,33 +224,6 @@ extension AddPaymentViewController: UITextFieldDelegate {
         
         return true
     }
-}
-
-extension AddPaymentViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-   
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return availableParents.count
-    }
-    
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    //MARK: Delegates
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return availableParents[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let pickerLabel = UILabel()
-        pickerLabel.textColor = UIColor.black
-        pickerLabel.text = availableParents[row]
-        // pickerLabel.font = UIFont(name: pickerLabel.font.fontName, size: 15)
-        pickerLabel.font = UIFont(name: pickerLabel.font.fontName, size: 14) // In this use your custom font
-        pickerLabel.textAlignment = .right
-        return pickerLabel
-    }
-    
 }
 
 class CurrencyPickerDelegateClass: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {

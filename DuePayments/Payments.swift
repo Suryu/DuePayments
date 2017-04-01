@@ -47,9 +47,10 @@ class Payments {
             }
         }
         
-        static func upload(completion: @escaping (JSON) -> ()) {
+        static func upload(completion: @escaping (JSON?) -> ()) {
             guard let dict = current.dictionaryObject else {
                 print("invalid metadata for upload")
+                completion(nil)
                 return
             }
             
@@ -61,58 +62,97 @@ class Payments {
         
     }
     
-    func download(completion: @escaping () -> ()) {
+    func download(completion: @escaping (Bool) -> ()) {
         Alamofire.request(Payments.jsonUrl).response { response in
             if let data = response.data,
                 let jsonString = String(data: data, encoding: String.Encoding.utf8) {
                 self.root = Payment(jsonString: jsonString)
-                Metadata.download { json in
-                    self.lastDownloadMetadata = json
+                Metadata.download { [weak self] json in
+                    
+                    guard let json = json else {
+                        self?.downloadErrorAlert()
+                        completion(false)
+                        return
+                    }
+                    
+                    self?.lastDownloadMetadata = json
+                    completion(true)
                 }
             } else {
                 print("Error: \(response.error)")
+                self.downloadErrorAlert()
+                completion(false)
             }
-            completion()
         }
     }
     
-    func upload(completion: @escaping () -> ()) {
+    func upload(completion: @escaping (Bool) -> ()) {
         guard let rootDict = root?.toDictionary() else {
             print("Could not upload - root does not exist")
+            uploadErrorAlert()
             return
         }
         
         if lastDownloadMetadata != nil {
-            Metadata.download { md in
-                guard let remoteTime = md?["lastUpload"]["timestamp"].double else {
+            Metadata.download { [weak self] md in
+                
+                guard let md = md else {
+                    print("Could not download metadata.")
+                    self?.uploadErrorAlert()
+                    completion(false)
+                    return
+                }
+                guard let remoteTime = md["lastUpload"]["timestamp"].double else {
+                    print("No timestamp in metadata")
+                    self?.uploadErrorAlert()
+                    completion(false)
                     return
                 }
                 
-                guard let localTime = self.lastDownloadMetadata?["lastUpload"]["timestamp"].double else {
+                guard let localTime = self?.lastDownloadMetadata?["lastUpload"]["timestamp"].double else {
+                    print("no timestamp in last download metadata")
+                    self?.uploadErrorAlert()
+                    completion(false)
                     return
                 }
                 
                 if remoteTime <= localTime {
                     Alamofire.request(Payments.jsonUrl, method: .put, parameters: rootDict, encoding: JSONEncoding.default).response { response in
+                        
+                        if response.error != nil {
+                            self?.uploadErrorAlert()
+                            print("error from Alamofire put request")
+                            return
+                        }
                         print("Uploaded")
                         Metadata.upload { uploadedMd in
-                            self.lastDownloadMetadata = uploadedMd
-                            completion()
+                            
+                            guard let uploadedMd = uploadedMd else {
+                                self?.uploadErrorAlert()
+                                print("UploadedMd nil")
+                                return
+                            }
+                            
+                            self?.lastDownloadMetadata = uploadedMd
+                            completion(true)
                         }
                     }
                 } else {
                     DispatchQueue.main.async {
-                        completion()
-                        self.showNeedsRefreshAlert()
+                        completion(false)
+                        UIApplication.showAlert(error: "PaymentsNotUpToDate".localized)
+                        return
                     }
                 }
             }
         }
     }
     
-    func showNeedsRefreshAlert() {
-        let alertController = UIAlertController(title: "Error".localized, message: "PaymentsNotUpToDate".localized, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in alertController.dismiss(animated: true, completion: nil) }))
-        UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+    func uploadErrorAlert() {
+        UIApplication.showAlert(error: "CouldNotUploadPayments".localized)
+    }
+    
+    func downloadErrorAlert() {
+        UIApplication.showAlert(error: "CouldNotDownloadPayments".localized)
     }
 }

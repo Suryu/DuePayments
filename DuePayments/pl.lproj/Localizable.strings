@@ -16,3 +16,7 @@
 "PullToRefresh" = "Pociągnij, aby odświeżyć";
 "Total" = "Razem";
 "Back" = "Wróć";
+"Details" = "Szczegóły";
+
+"CouldNotUploadPayments" = "Nie można było zaktualizować płatności na serwerze - sprawdź swoje połączenie z internetem.";
+"CouldNotDownloadPayments" = "Nie można było pobrać płatności z serwera - sprawdź swoje połączenie z internetem.";

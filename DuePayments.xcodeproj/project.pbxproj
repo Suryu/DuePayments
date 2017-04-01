@@ -10,6 +10,7 @@
 		471C71FF1E8FC57B000C2C39 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 471C72011E8FC57B000C2C39 /* Localizable.strings */; };
 		471C72041E8FE085000C2C39 /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471C72031E8FE085000C2C39 /* StringExt.swift */; };
 		471C72061E8FE08D000C2C39 /* DoubleExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471C72051E8FE08D000C2C39 /* DoubleExt.swift */; };
+		471C72081E8FE24E000C2C39 /* PickerLayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471C72071E8FE24E000C2C39 /* PickerLayerViewController.swift */; };
 		47228DED1E8EB9B200C261F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228DEC1E8EB9B200C261F9 /* AppDelegate.swift */; };
 		47228DEF1E8EB9B200C261F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228DEE1E8EB9B200C261F9 /* ViewController.swift */; };
 		47228DF21E8EB9B200C261F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47228DF01E8EB9B200C261F9 /* Main.storyboard */; };
@@ -52,6 +53,7 @@
 		471C72021E8FC57E000C2C39 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		471C72031E8FE085000C2C39 /* StringExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
 		471C72051E8FE08D000C2C39 /* DoubleExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleExt.swift; sourceTree = "<group>"; };
+		471C72071E8FE24E000C2C39 /* PickerLayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerLayerViewController.swift; sourceTree = "<group>"; };
 		47228DE91E8EB9B200C261F9 /* DuePayments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuePayments.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47228DEC1E8EB9B200C261F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47228DEE1E8EB9B200C261F9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				47228DEE1E8EB9B200C261F9 /* ViewController.swift */,
 				47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */,
 				47228E1C1E8EC02600C261F9 /* PaymentCell.swift */,
+				471C72071E8FE24E000C2C39 /* PickerLayerViewController.swift */,
 				47228DF01E8EB9B200C261F9 /* Main.storyboard */,
 				471C72011E8FC57B000C2C39 /* Localizable.strings */,
 				47228DF31E8EB9B200C261F9 /* Assets.xcassets */,
@@ -350,6 +353,7 @@
 				47228E1D1E8EC02600C261F9 /* PaymentCell.swift in Sources */,
 				47228E1F1E8ECD4900C261F9 /* DictionaryMappable.swift in Sources */,
 				47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */,
+				471C72081E8FE24E000C2C39 /* PickerLayerViewController.swift in Sources */,
 				47228DED1E8EB9B200C261F9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,3 +16,7 @@
 "PullToRefresh" = "Pull to refresh";
 "Total" = "Total";
 "Back" = "Back";
+"Details" = "Details";
+
+"CouldNotUploadPayments" = "Could not upload payments to the server - please check your internet connection.";
+"CouldNotDownloadPayments" = "Could not download payments from the server - please check your internet connection.";
