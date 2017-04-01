@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = "Subpayment for"; ObjectID = "0NE-DV-Fkm"; */
+"0NE-DV-Fkm.text" = "Subpayment for";
+
+/* Class = "UITextField"; placeholder = "Payment price"; ObjectID = "9bR-b9-vq1"; */
+"9bR-b9-vq1.placeholder" = "Payment price";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "DnT-L5-nfP"; */
+"DnT-L5-nfP.text" = "Name";
+
+/* Class = "UILabel"; text = "Price"; ObjectID = "U2i-79-0Ja"; */
+"U2i-79-0Ja.text" = "Price";
+
+/* Class = "UILabel"; text = "Price"; ObjectID = "aRX-9E-SSA"; */
+"aRX-9E-SSA.text" = "Price";
+
+/* Class = "UITableViewSection"; headerTitle = "Details"; ObjectID = "jwG-eM-Hdc"; */
+"jwG-eM-Hdc.headerTitle" = "Details";
+
+/* Class = "UITextField"; placeholder = "Enter payment name"; ObjectID = "pJe-Er-kOH"; */
+"pJe-Er-kOH.placeholder" = "Enter payment name";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "u6r-sh-h53"; */
+"u6r-sh-h53.text" = "Name";

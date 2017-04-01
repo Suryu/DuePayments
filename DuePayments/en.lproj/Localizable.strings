@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  DuePayments
+
+  Created by Paweł Wojtkowiak on 01.04.2017.
+  Copyright © 2017 Paweł Wojtkowiak. All rights reserved.
+*/
+
+"None" = "None";
+"MoveUp" = "Move Up";
+"Error" = "Error";
+"PaymentsNotUpToDate" = "Payments are not up to date - refresh to synchronize with the server.";
+"PaymentExists" = "Payment with this name already exists.";
+"Edit" = "Edit";
+"Delete" = "Delete";
+"PullToRefresh" = "Pull to refresh";
+"Total" = "Total";
+"Back" = "Back";

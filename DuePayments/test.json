@@ -1,0 +1,26 @@
+{
+"name": "root",
+"value": 0,
+"payments": [
+{
+"name": "Styczeń",
+"value": 0,
+"payments": [
+{
+"name": "Wynajem",
+"value": 500,
+"payments": [
+
+]
+},
+{
+"name": "Czynsz",
+"value": 450,
+"payments": [
+
+]
+}
+]
+}
+]
+}
