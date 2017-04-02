@@ -21,6 +21,14 @@ class PaymentsTableViewController: UIViewController {
         return Payments.shared.root?.getPayment(atPath: path)
     }
     
+    var customRowCount: Int {
+        return 1
+    }
+    
+    var rowCount: Int {
+        return (payment?.payments.count ?? 0) + customRowCount
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,8 +44,6 @@ class PaymentsTableViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "PullToRefresh".localized)
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
-        
-        navigationItem.backBarButtonItem?.title = "Back".localized
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,7 +63,7 @@ class PaymentsTableViewController: UIViewController {
 
 extension PaymentsTableViewController {
     
-    @IBAction func addPayment(_ sender: UIBarButtonItem) {
+    func showAddPayment() {
         let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
         vc.path = path
         vc.actionType = .add
@@ -88,8 +94,8 @@ extension PaymentsTableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func deleteItem(row: Int) {
-        guard let name = payment?.payments[row].name else {
+    func deleteItem(at index: Int) {
+        guard let name = payment?.payments[index].name else {
             return
         }
         
@@ -103,17 +109,17 @@ extension PaymentsTableViewController {
         paymentsUpdated()
     }
     
-    func editItem(row: Int) {
+    func editItem(at index: Int) {
         guard let payment = payment else {
             return
         }
         var oldPath = path
-        oldPath.append(payment.payments[row].name)
+        oldPath.append(payment.payments[index].name)
         
         let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
         vc.path = path
         vc.actionType = .edit
-        vc.editedPayment = payment.payments[row]
+        vc.editedPayment = payment.payments[index]
         vc.callback = { [weak self] editedPayment, parentPath in
             
             guard let strongSelf = self else {
@@ -168,10 +174,10 @@ extension PaymentsTableViewController {
     func paymentsUpdated(upload: Bool = true) {
         
         let finish = { [weak self] in
-            if self?.payment == nil || self?.payment?.name == "root" {
-                self?.title = "\("Total".localized): \(self?.payment?.totalValue.toCurrencyString(localeIdentifier: "pl_PL") ?? "-")"
+            if let isRoot = self?.path.isEmpty, isRoot == true {
+                self?.title = "Payments".localized
             } else {
-                self?.title = "\(self?.payment?.name ?? "") (\(self?.payment?.totalValue.toCurrencyString(localeIdentifier: "pl_PL") ?? "-"))"
+                self?.title = self?.payment?.name
             }
         }
         
@@ -234,61 +240,99 @@ extension PaymentsTableViewController {
     }
 }
 
+// MARK: IBActions
+
+extension PaymentsTableViewController {
+    @IBAction func addPayment(_ sender: UIBarButtonItem) {
+        showAddPayment()
+    }
+}
+
+// MARK: Table view
+
 extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return payment?.payments.count ?? 0
+        return rowCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let row = indexPath.row
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentCell") as? PaymentCell else {
             fatalError("Reusable cell 'PaymentCell' not available")
         }
         
-        guard let payment = payment else {
-            fatalError("This payment does not exist.")
-        }
-        
-        guard indexPath.row < payment.payments.count else {
+        guard row < rowCount else {
             fatalError("Trying to produce a cell for non existing payment")
         }
         
-        let currentPayment = payment.payments[indexPath.row]
-        
-        cell.nameLabel.text = currentPayment.name
-        
-        let totalValue = currentPayment.totalValue
-        if totalValue != 0 {
-            cell.priceLabel.text = totalValue.toCurrencyString(localeIdentifier: "pl_PL")
+        if row < customRowCount {
+            
+            cell.nameLabel.textColor = UIColor.red
+            cell.priceLabel.textColor = UIColor.red
+            
+            cell.nameLabel.text = "Total".localized
+            cell.priceLabel.text = payment?.totalValue.toCurrencyString(localeIdentifier: "pl_PL") ?? "-"
+            
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            cell.isUserInteractionEnabled = false
+            
         } else {
-            cell.priceLabel.text = ""
+            
+            guard let payment = payment else {
+                fatalError("This payment does not exist.")
+            }
+            
+            let paymentIdx = row - customRowCount
+            let currentPayment = payment.payments[paymentIdx]
+            
+            cell.nameLabel.text = currentPayment.name
+            
+            let totalValue = currentPayment.totalValue
+            if totalValue != 0 {
+                cell.priceLabel.text = totalValue.toCurrencyString(localeIdentifier: "pl_PL")
+            } else {
+                cell.priceLabel.text = ""
+            }
+            
+            cell.accessoryType = currentPayment.payments.isEmpty ? .none : .disclosureIndicator
+            cell.selectionStyle = currentPayment.payments.isEmpty ? .none : .default
         }
-        cell.accessoryType = currentPayment.payments.isEmpty ? .none : .disclosureIndicator
-        cell.selectionStyle = currentPayment.payments.isEmpty ? .none : .default
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let payment = payment else {
+        let row = indexPath.row
+        
+        guard row < rowCount else {
             return
         }
-        
-        guard indexPath.row < payment.payments.count else {
-            return
+
+        if row < customRowCount {
+            
+        } else {
+            let paymentIdx = row - customRowCount
+            
+            guard let payment = payment else {
+                return
+            }
+            
+            let currentPayment = payment.payments[paymentIdx]
+            
+            guard currentPayment.payments.count > 0 else {
+                return
+            }
+            
+            let vc = PaymentsTableViewController.instantiate(storyboard: "Main", identifier: "PaymentsTableViewController")
+            vc.path = path
+            vc.path.append(currentPayment.name)
+            print(vc.path)
+            navigationController?.pushViewController(vc, animated: true)
         }
-        
-        let currentPayment = payment.payments[indexPath.row]
-        
-        guard currentPayment.payments.count > 0 else {
-            return
-        }
-        
-        let vc = PaymentsTableViewController.instantiate(storyboard: "Main", identifier: "PaymentsTableViewController")
-        vc.path = path
-        vc.path.append(currentPayment.name)
-        print(vc.path)
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -296,15 +340,19 @@ extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // TODO: Moving cells somehow
         return true
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let paymentIdx = indexPath.row - customRowCount
+        
         let deleteItem = UITableViewRowAction(style: .destructive, title: "Delete".localized) { [weak self] (action, indexPath) in
-            self?.deleteItem(row: indexPath.row)
+            self?.deleteItem(at: paymentIdx)
         }
         let editItem = UITableViewRowAction(style: .normal, title: "Edit".localized) { [weak self] (action, indexPath) in
-            self?.editItem(row: indexPath.row)
+            self?.editItem(at: paymentIdx)
         }
         return [deleteItem, editItem]
     }

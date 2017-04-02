@@ -31,13 +31,16 @@ class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        pickerView.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+        pickerView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        UIView.animate(withDuration: 0.1) { [weak self] in
-            self?.pickerView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-        }
+        UIView.animate(withDuration: 0.1,
+                       delay: 0.0,
+                       options: .curveEaseOut,
+                       animations: { [weak self] in
+                        self?.pickerView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }, completion: nil)
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {

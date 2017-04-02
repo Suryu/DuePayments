@@ -101,8 +101,6 @@ class AddPaymentViewController: UITableViewController {
         if availableParents.count > 0 {
             parentPaymentNameLabel.text = availableParents[0]
         }
-        
-        navigationItem.backBarButtonItem?.title = "Back".localized
     }
     
     @IBAction func nameDidChange(_ sender: UITextField) {
@@ -113,7 +111,7 @@ class AddPaymentViewController: UITableViewController {
         guard let picker = picker else {
             return
         }
-        
+        view.endEditing(true)
         picker.options = availableParents
         picker.callback = { [weak self] index, option in
             self?.currentParentRow = index

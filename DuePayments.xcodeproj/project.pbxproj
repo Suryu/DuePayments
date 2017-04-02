@@ -27,6 +27,8 @@
 		47228E311E8EF30200C261F9 /* Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E301E8EF30200C261F9 /* Payments.swift */; };
 		47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */; };
 		47228E361E8F06EA00C261F9 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E351E8F06EA00C261F9 /* UIViewControllerExtensions.swift */; };
+		473CBE511E9130A30060CC68 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE501E9130A30060CC68 /* AppSettings.swift */; };
+		47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,8 @@
 		47228E301E8EF30200C261F9 /* Payments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Payments.swift; sourceTree = "<group>"; };
 		47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentViewController.swift; sourceTree = "<group>"; };
 		47228E351E8F06EA00C261F9 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		473CBE501E9130A30060CC68 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,21 +133,16 @@
 		47228DEB1E8EB9B200C261F9 /* DuePayments */ = {
 			isa = PBXGroup;
 			children = (
+				473CBE4D1E912D6C0060CC68 /* Storyboards */,
+				473CBE4C1E912D470060CC68 /* Libs */,
+				473CBE4F1E9130740060CC68 /* Models */,
+				473CBE4B1E912D380060CC68 /* Views */,
+				473CBE4A1E912D1F0060CC68 /* ViewControllers */,
 				47228E341E8F06E000C261F9 /* Extensions */,
+				473CBE4E1E912D890060CC68 /* Resources */,
 				47228DEC1E8EB9B200C261F9 /* AppDelegate.swift */,
-				47228DEE1E8EB9B200C261F9 /* ViewController.swift */,
-				47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */,
-				47228E1C1E8EC02600C261F9 /* PaymentCell.swift */,
-				471C72071E8FE24E000C2C39 /* PickerLayerViewController.swift */,
-				47228DF01E8EB9B200C261F9 /* Main.storyboard */,
 				471C72011E8FC57B000C2C39 /* Localizable.strings */,
-				47228DF31E8EB9B200C261F9 /* Assets.xcassets */,
-				47228DF51E8EB9B200C261F9 /* LaunchScreen.storyboard */,
 				47228DF81E8EB9B200C261F9 /* Info.plist */,
-				47228E1A1E8EBADD00C261F9 /* Payment.swift */,
-				47228E1E1E8ECD4900C261F9 /* DictionaryMappable.swift */,
-				47228E201E8ECFA100C261F9 /* test.json */,
-				47228E301E8EF30200C261F9 /* Payments.swift */,
 			);
 			path = DuePayments;
 			sourceTree = "<group>";
@@ -183,6 +182,61 @@
 				471C72051E8FE08D000C2C39 /* DoubleExt.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		473CBE4A1E912D1F0060CC68 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				47228DEE1E8EB9B200C261F9 /* ViewController.swift */,
+				47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */,
+				471C72071E8FE24E000C2C39 /* PickerLayerViewController.swift */,
+				47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		473CBE4B1E912D380060CC68 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47228E1C1E8EC02600C261F9 /* PaymentCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		473CBE4C1E912D470060CC68 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				47228E1E1E8ECD4900C261F9 /* DictionaryMappable.swift */,
+			);
+			name = Libs;
+			sourceTree = "<group>";
+		};
+		473CBE4D1E912D6C0060CC68 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				47228DF01E8EB9B200C261F9 /* Main.storyboard */,
+				47228DF51E8EB9B200C261F9 /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		473CBE4E1E912D890060CC68 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				47228E201E8ECFA100C261F9 /* test.json */,
+				47228DF31E8EB9B200C261F9 /* Assets.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		473CBE4F1E9130740060CC68 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				47228E1A1E8EBADD00C261F9 /* Payment.swift */,
+				47228E301E8EF30200C261F9 /* Payments.swift */,
+				473CBE501E9130A30060CC68 /* AppSettings.swift */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -344,6 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				473CBE511E9130A30060CC68 /* AppSettings.swift in Sources */,
 				47228E361E8F06EA00C261F9 /* UIViewControllerExtensions.swift in Sources */,
 				47228E311E8EF30200C261F9 /* Payments.swift in Sources */,
 				47228DEF1E8EB9B200C261F9 /* ViewController.swift in Sources */,
@@ -352,6 +407,7 @@
 				471C72041E8FE085000C2C39 /* StringExt.swift in Sources */,
 				47228E1D1E8EC02600C261F9 /* PaymentCell.swift in Sources */,
 				47228E1F1E8ECD4900C261F9 /* DictionaryMappable.swift in Sources */,
+				47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */,
 				47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */,
 				471C72081E8FE24E000C2C39 /* PickerLayerViewController.swift in Sources */,
 				47228DED1E8EB9B200C261F9 /* AppDelegate.swift in Sources */,
