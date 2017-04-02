@@ -28,6 +28,7 @@ class SettingsTableViewController: UITableViewController {
     // * History, favourites? (quick payment links)
     
     @IBOutlet weak var lastUpdateInfo: UILabel!
+    @IBOutlet weak var autoUpdateSwitch: UISwitch!
     
     override func viewDidLoad() {
         tableView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.size.height, left: 0, bottom: 0, right: 0)
@@ -35,18 +36,30 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         let timestamp = Payments.shared.lastDownloadMetadata?["lastUpload"]["timestamp"].double
-        let user = Payments.shared.lastDownloadMetadata?["lastUpload"]["user"]
+        let user = Payments.shared.lastDownloadMetadata?["lastUpload"]["user"].string
         
         if let timestamp = timestamp, let user = user {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .short
-            let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
-            lastUpdateInfo.text = "\("LastUpdate".localized): \(dateString) (\(user))"
+            setLastUpdateText(timestamp: timestamp, user: user)
         }
+        
+        loadSettings()
+    }
+    
+    func loadSettings() {
+        AppSettings.shared.generalSettings.load()
+        autoUpdateSwitch.isOn = AppSettings.shared.generalSettings[.updateAfterEachChange]
+    }
+    
+    func setLastUpdateText(timestamp: TimeInterval, user: String) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+        lastUpdateInfo.text = "\("LastUpdate".localized): \(dateString) (\(user))"
     }
     
     @IBAction func updateAfterEachChangeSwitched(_ sender: UISwitch) {
-        AppSettings.shared.updateAfterEachChange = sender.isOn
+        AppSettings.shared.generalSettings[.updateAfterEachChange] = autoUpdateSwitch.isOn
+        AppSettings.shared.generalSettings.store()
     }
 }

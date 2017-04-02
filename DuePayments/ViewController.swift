@@ -59,6 +59,9 @@ class PaymentsTableViewController: UIViewController {
         fetchPayments(showIndicator: false)
     }
 
+    @IBAction func uploadPaymentsTapped(_ sender: UIBarButtonItem) {
+        uploadPayments()
+    }
 }
 
 extension PaymentsTableViewController {
@@ -173,41 +176,41 @@ extension PaymentsTableViewController {
     
     func paymentsUpdated(upload: Bool = true) {
         
-        let finish = { [weak self] in
-            if let isRoot = self?.path.isEmpty, isRoot == true {
-                self?.title = "Payments".localized
-            } else {
-                self?.title = self?.payment?.name
-            }
+        if path.isEmpty {
+            title = "Payments".localized
+        } else {
+            title = payment?.name
         }
         
         tableView.reloadData()
         
-        if upload {
-            startBlockingTask()
+        if upload && AppSettings.shared.generalSettings[.updateAfterEachChange] {
+            uploadPayments()
+        }
+    }
+    
+    func uploadPayments(finished: (() -> ())? = nil) {
+        startBlockingTask()
+        
+        Payments.shared.upload() { [weak self] success in
+            self?.stopBlockingTask()
             
-            Payments.shared.upload() { [weak self] success in
-                self?.stopBlockingTask()
-                
-                guard success == true else {
-                    return
-                }
-                
-                if let payment = self?.payment,
-                    payment.payments.count == 0,
-                    let navigationController = self?.navigationController,
-                    navigationController.viewControllers.count > 1 {
-                    
-                    if let topVC = navigationController.viewControllers[navigationController.viewControllers.count - 1] as? PaymentsTableViewController {
-                        topVC.paymentsUpdated(upload: false)
-                    }
-                    _ = navigationController.popViewController(animated: true)
-                }
-                
-                finish()
+            guard success == true else {
+                return
             }
-        } else {
-            finish()
+            
+            if let payment = self?.payment,
+                payment.payments.count == 0,
+                let navigationController = self?.navigationController,
+                navigationController.viewControllers.count > 1 {
+                
+                if let topVC = navigationController.viewControllers[navigationController.viewControllers.count - 1] as? PaymentsTableViewController {
+                    topVC.paymentsUpdated(upload: false)
+                }
+                _ = navigationController.popViewController(animated: true)
+            }
+            
+            finished?()
         }
     }
     
