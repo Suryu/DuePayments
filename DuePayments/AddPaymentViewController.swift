@@ -23,7 +23,7 @@ class AddPaymentViewController: UITableViewController {
     var initialName: String = ""
     var editedPayment: Payment = Payment()
     var payment: Payment? {
-        return Payments.shared.root?.getPayment(atPath: path)
+        return PaymentProvider.shared.root.getPayment(atPath: path)
     }
     var callback: ((Payment, [String]) -> ())?
     
@@ -205,10 +205,8 @@ extension AddPaymentViewController {
         if actionType == .add {
             var nodePath = childPath
             nodePath.append(editedPayment.name)
-            guard Payments.shared.root?.getPayment(atPath: nodePath) == nil else {
-                let alertController = UIAlertController(title: "Error".localized, message: "PaymentExists".localized, preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in alertController.dismiss(animated: true, completion: nil) }))
-                UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+            guard PaymentProvider.shared.root.getPayment(atPath: nodePath) == nil else {
+                UIAlertController(errorMessage: "PaymentExists".localized).present()
                 return
             }
         }

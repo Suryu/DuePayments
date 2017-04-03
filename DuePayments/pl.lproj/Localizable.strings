@@ -22,3 +22,8 @@
 "LastUpdate" = "Ostatnia aktualizacja";
 "CouldNotUploadPayments" = "Nie można było zaktualizować płatności na serwerze - sprawdź swoje połączenie z internetem.";
 "CouldNotDownloadPayments" = "Nie można było pobrać płatności z serwera - sprawdź swoje połączenie z internetem.";
+"ListIdentifier" = "Identyfikator listy";
+"ListIdentifierDescription" = "Identyfikator listy jest unikatowym identyfikatorem Twoich płatności na serwerze. Aby dzielić listę z inną osobą, należy używać tego samego identyfikatora.";
+"ListIdNotEntered" = "Nie ustawiono identyfikatora listy. Podaj identyfikator w ustawieniach.";
+"ListInvalid" = "Lista z podanym identyfikatorem nie jest poprawna.";
+"ListDoesNotExist" = "Lista z podanym identyfikatorem nie istnieje.";

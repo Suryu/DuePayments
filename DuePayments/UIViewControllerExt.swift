@@ -1,5 +1,5 @@
 //
-//  UIViewControllerExtensions.swift
+//  UIViewControllerExt.swift
 //  DuePayments
 //
 //  Created by Paweł Wojtkowiak on 31.03.2017.

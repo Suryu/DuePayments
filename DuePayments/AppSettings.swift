@@ -10,7 +10,46 @@ import Foundation
 
 extension DefaultsKeys {
     static let updateAfterEachChange = DefaultsKey<Bool?>("updateAfterEachChange")
+    static let listId = DefaultsKey<String?>("listIdentifier")
 }
+
+// MARK: GeneralSettings
+
+struct GeneralSettings: SettingsSet {
+    let rawValue: Int
+    
+    static let updateAfterEachChange = GeneralSettings(rawValue: 1 << 0)
+    static var listId = ""
+    
+    func store() {
+        Defaults[.updateAfterEachChange] = self[.updateAfterEachChange]
+    }
+    
+    mutating func load() {
+        self[.updateAfterEachChange] = Defaults[.updateAfterEachChange] ?? true
+    }
+}
+
+// MARK: AppSettings
+final class AppSettings {
+    
+    static let shared = AppSettings()
+    var generalSettings: GeneralSettings = [.updateAfterEachChange]
+    var listId = ""
+    
+    func store() {
+        generalSettings.store()
+        
+        Defaults[.listId] = listId
+    }
+    
+    func load() {
+        generalSettings.load()
+        
+        listId = Defaults[.listId] ?? ""
+    }
+}
+
 
 // MARK: Settings protocol
 
@@ -30,36 +69,5 @@ extension SettingsSet {
                 self.remove(member)
             }
         }
-    }
-}
-
-// MARK: GeneralSettings
-
-struct GeneralSettings: SettingsSet {
-    let rawValue: Int
-    
-    static let updateAfterEachChange = GeneralSettings(rawValue: 1 << 0)
-    
-    func store() {
-        Defaults[.updateAfterEachChange] = self[.updateAfterEachChange]
-    }
-    
-    mutating func load() {
-        self[.updateAfterEachChange] = Defaults[.updateAfterEachChange] ?? true
-    }
-}
-
-// MARK: AppSettings
-final class AppSettings {
-    
-    static let shared = AppSettings()
-    var generalSettings: GeneralSettings = [.updateAfterEachChange]
-    
-    func store() {
-        generalSettings.store()
-    }
-    
-    func load() {
-        generalSettings.load()
     }
 }

@@ -18,7 +18,7 @@ class PaymentsTableViewController: UIViewController {
     
     var path: [String] = []
     var payment: Payment? {
-        return Payments.shared.root?.getPayment(atPath: path)
+        return PaymentProvider.shared.root.getPayment(atPath: path)
     }
     
     var customRowCount: Int {
@@ -32,10 +32,6 @@ class PaymentsTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if Payments.shared.root == nil {
-            fetchPayments()
-        }
-        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView(frame: CGRect.zero)
@@ -44,6 +40,10 @@ class PaymentsTableViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "PullToRefresh".localized)
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
+        
+        if path.isEmpty {
+            fetchPayments()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,7 +75,7 @@ extension PaymentsTableViewController {
                 return
             }
             
-            guard let parentPayment = Payments.shared.root?.getPayment(atPath: parentPath) else {
+            guard let parentPayment = PaymentProvider.shared.root.getPayment(atPath: parentPath) else {
                 print("This payment does not exist!")
                 return
             }
@@ -88,9 +88,9 @@ extension PaymentsTableViewController {
                 oldParentPayment.payments = []
                 
                 newParentPayment.payments.append(oldParentPayment)
-                Payments.shared.root?.replace(with: newParentPayment, atPath: parentPath)
+                PaymentProvider.shared.root.replace(with: newParentPayment, atPath: parentPath)
             }
-            Payments.shared.root?.add(newPayment: payment, atPath: parentPath)
+            PaymentProvider.shared.root.add(newPayment: payment, atPath: parentPath)
             strongSelf.paymentsUpdated()
             
         }
@@ -104,9 +104,10 @@ extension PaymentsTableViewController {
         
         var pathToRemove = path
         pathToRemove.append(name)
-        let removedItem = Payments.shared.root?.remove(atPath: pathToRemove)
-        if removedItem == nil {
+        let removedItem = PaymentProvider.shared.root.remove(atPath: pathToRemove)
+        if removedItem == false {
             print("No items removed - path not found?")
+            return
         }
         
         paymentsUpdated()
@@ -130,11 +131,11 @@ extension PaymentsTableViewController {
             }
             
             if parentPath == strongSelf.path {
-                Payments.shared.root?.replace(with: editedPayment, atPath: oldPath)
+                PaymentProvider.shared.root.replace(with: editedPayment, atPath: oldPath)
             } else {
-                Payments.shared.root?.remove(atPath: oldPath)
+                PaymentProvider.shared.root.remove(atPath: oldPath)
                 
-                guard let parentPayment = Payments.shared.root?.getPayment(atPath: parentPath) else {
+                guard let parentPayment = PaymentProvider.shared.root.getPayment(atPath: parentPath) else {
                     print("This payment does not exist!")
                     return
                 }
@@ -147,10 +148,10 @@ extension PaymentsTableViewController {
                     oldParentPayment.payments = []
                     
                     newParentPayment.payments.append(oldParentPayment)
-                    Payments.shared.root?.replace(with: newParentPayment, atPath: parentPath)
+                    PaymentProvider.shared.root.replace(with: newParentPayment, atPath: parentPath)
                 }
                 
-                Payments.shared.root?.add(newPayment: editedPayment, atPath: parentPath)
+                PaymentProvider.shared.root.add(newPayment: editedPayment, atPath: parentPath)
             }
             
             strongSelf.paymentsUpdated()
@@ -164,13 +165,29 @@ extension PaymentsTableViewController {
             activityIndicator.startAnimating()
         }
         
-        Payments.shared.download() { [weak self] success in
+        PaymentProvider.shared.download() { [weak self] status in
             
             self?.activityIndicator.stopAnimating()
             self?.refreshControl.endRefreshing()
-            if success {
-                self?.paymentsUpdated(upload: false)
+                        
+            switch status {
+            case .busyError, .ok:
+                break
+            case .listIdNotEntered:
+                UIAlertController(errorMessage: "ListIdNotEntered".localized).present()
+                return
+            case .isNotValid:
+                UIAlertController(errorMessage: "ListInvalid".localized).present()
+                return
+            case .errorCode(404), .errorCode(500):
+                UIAlertController(errorMessage: "ListDoesNotExist".localized).present()
+                return
+            default:
+                UIAlertController(errorMessage: "CouldNotDownloadPayments".localized).present()
+                return
             }
+            
+            self?.paymentsUpdated(upload: false)
         }
     }
     
@@ -192,10 +209,23 @@ extension PaymentsTableViewController {
     func uploadPayments(finished: (() -> ())? = nil) {
         startBlockingTask()
         
-        Payments.shared.upload() { [weak self] success in
+        PaymentProvider.shared.upload() { [weak self] status in
             self?.stopBlockingTask()
             
-            guard success == true else {
+            switch status {
+            case .busyError, .ok:
+                break
+            case .listIdNotEntered:
+                UIAlertController(errorMessage: "ListIdNotEntered".localized).present()
+                return
+            case .isNotValid:
+                UIAlertController(errorMessage: "ListInvalid".localized).present()
+                return
+            case .errorCode(404), .errorCode(500):
+                UIAlertController(errorMessage: "ListDoesNotExist".localized).present()
+                return
+            default:
+                UIAlertController(errorMessage: "CouldNotDownloadPayments".localized).present()
                 return
             }
             

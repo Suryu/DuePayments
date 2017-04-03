@@ -22,3 +22,8 @@
 "LastUpdate" = "Last update";
 "CouldNotUploadPayments" = "Could not upload payments to the server - please check your internet connection.";
 "CouldNotDownloadPayments" = "Could not download payments from the server - please check your internet connection.";
+"ListIdentifier" = "List identifier";
+"ListIdentifierDescription" = "List identifier is an unique identifier for your payments on the server. To share a list with another person, use the same identifier.";
+"ListIdNotEntered" = "List identifier not set. Please enter an identifier in settings tab.";
+"ListInvalid" = "List with given identifier is not valid.";
+"ListDoesNotExist" = "List with given identifier does not exist.";

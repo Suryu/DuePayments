@@ -24,12 +24,13 @@
 		47228E211E8ECFA100C261F9 /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 47228E201E8ECFA100C261F9 /* test.json */; };
 		47228E251E8ED21200C261F9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47228E231E8ED21200C261F9 /* Alamofire.framework */; };
 		47228E261E8ED21200C261F9 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47228E241E8ED21200C261F9 /* SwiftyJSON.framework */; };
-		47228E311E8EF30200C261F9 /* Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E301E8EF30200C261F9 /* Payments.swift */; };
+		47228E311E8EF30200C261F9 /* PaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E301E8EF30200C261F9 /* PaymentProvider.swift */; };
 		47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */; };
-		47228E361E8F06EA00C261F9 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E351E8F06EA00C261F9 /* UIViewControllerExtensions.swift */; };
+		47228E361E8F06EA00C261F9 /* UIViewControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E351E8F06EA00C261F9 /* UIViewControllerExt.swift */; };
 		473CBE511E9130A30060CC68 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE501E9130A30060CC68 /* AppSettings.swift */; };
 		473CBE571E9169990060CC68 /* SwiftyUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE561E9169990060CC68 /* SwiftyUserDefaults.swift */; };
-		473CBE591E916EA40060CC68 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE581E916EA40060CC68 /* Dictionary.swift */; };
+		473CBE591E916EA40060CC68 /* DictionaryExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE581E916EA40060CC68 /* DictionaryExt.swift */; };
+		473EA5AA1E92BC5700CB59BF /* UIAlertControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */; };
 		47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,14 +78,15 @@
 		47228E201E8ECFA100C261F9 /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		47228E231E8ED21200C261F9 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		47228E241E8ED21200C261F9 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
-		47228E301E8EF30200C261F9 /* Payments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Payments.swift; sourceTree = "<group>"; };
+		47228E301E8EF30200C261F9 /* PaymentProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentProvider.swift; sourceTree = "<group>"; };
 		47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentViewController.swift; sourceTree = "<group>"; };
-		47228E351E8F06EA00C261F9 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		47228E351E8F06EA00C261F9 /* UIViewControllerExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExt.swift; sourceTree = "<group>"; };
 		473CBE501E9130A30060CC68 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		473CBE521E9167960060CC68 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		473CBE531E9167960060CC68 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		473CBE561E9169990060CC68 /* SwiftyUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyUserDefaults.swift; sourceTree = "<group>"; };
-		473CBE581E916EA40060CC68 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
+		473CBE581E916EA40060CC68 /* DictionaryExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryExt.swift; sourceTree = "<group>"; };
+		473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExt.swift; sourceTree = "<group>"; };
 		47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,7 +146,7 @@
 				473CBE4F1E9130740060CC68 /* Models */,
 				473CBE4B1E912D380060CC68 /* Views */,
 				473CBE4A1E912D1F0060CC68 /* ViewControllers */,
-				47228E341E8F06E000C261F9 /* Extensions */,
+				47228E341E8F06E000C261F9 /* Helpers/Extensions */,
 				473CBE4E1E912D890060CC68 /* Resources */,
 				47228DEC1E8EB9B200C261F9 /* AppDelegate.swift */,
 				471C72011E8FC57B000C2C39 /* Localizable.strings */,
@@ -182,15 +184,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		47228E341E8F06E000C261F9 /* Extensions */ = {
+		47228E341E8F06E000C261F9 /* Helpers/Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				47228E351E8F06EA00C261F9 /* UIViewControllerExtensions.swift */,
+				47228E351E8F06EA00C261F9 /* UIViewControllerExt.swift */,
 				471C72031E8FE085000C2C39 /* StringExt.swift */,
 				471C72051E8FE08D000C2C39 /* DoubleExt.swift */,
-				473CBE581E916EA40060CC68 /* Dictionary.swift */,
+				473CBE581E916EA40060CC68 /* DictionaryExt.swift */,
+				473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */,
 			);
-			name = Extensions;
+			name = Helpers/Extensions;
 			sourceTree = "<group>";
 		};
 		473CBE4A1E912D1F0060CC68 /* ViewControllers */ = {
@@ -243,7 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				47228E1A1E8EBADD00C261F9 /* Payment.swift */,
-				47228E301E8EF30200C261F9 /* Payments.swift */,
+				47228E301E8EF30200C261F9 /* PaymentProvider.swift */,
 				473CBE501E9130A30060CC68 /* AppSettings.swift */,
 			);
 			name = Models;
@@ -409,9 +412,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				473CBE511E9130A30060CC68 /* AppSettings.swift in Sources */,
-				47228E361E8F06EA00C261F9 /* UIViewControllerExtensions.swift in Sources */,
-				47228E311E8EF30200C261F9 /* Payments.swift in Sources */,
+				47228E361E8F06EA00C261F9 /* UIViewControllerExt.swift in Sources */,
+				47228E311E8EF30200C261F9 /* PaymentProvider.swift in Sources */,
 				47228DEF1E8EB9B200C261F9 /* ViewController.swift in Sources */,
+				473EA5AA1E92BC5700CB59BF /* UIAlertControllerExt.swift in Sources */,
 				47228E1B1E8EBADD00C261F9 /* Payment.swift in Sources */,
 				471C72061E8FE08D000C2C39 /* DoubleExt.swift in Sources */,
 				473CBE571E9169990060CC68 /* SwiftyUserDefaults.swift in Sources */,
@@ -419,7 +423,7 @@
 				47228E1D1E8EC02600C261F9 /* PaymentCell.swift in Sources */,
 				47228E1F1E8ECD4900C261F9 /* DictionaryMappable.swift in Sources */,
 				47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */,
-				473CBE591E916EA40060CC68 /* Dictionary.swift in Sources */,
+				473CBE591E916EA40060CC68 /* DictionaryExt.swift in Sources */,
 				47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */,
 				471C72081E8FE24E000C2C39 /* PickerLayerViewController.swift in Sources */,
 				47228DED1E8EB9B200C261F9 /* AppDelegate.swift in Sources */,
