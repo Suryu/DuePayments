@@ -11,6 +11,9 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
+
+// bup: http://myjson.com/x8lq3
+
 enum SyncStatus {
     case ok
     case busyError
@@ -20,16 +23,65 @@ enum SyncStatus {
     case error
 }
 
+extension SyncStatus {
+    
+    static let genericError = "GenericError"
+    
+    var errorMessage: String? {
+        switch self {
+        case .busyError, .ok:
+            return nil
+        case .listIdNotEntered:
+            return "ListIdNotEntered".localized
+        case .isNotValid:
+            return "ListInvalid".localized
+        case .errorCode(404), .errorCode(500):
+            return "ListDoesNotExist".localized
+        default:
+            return "GenericError"
+        }
+    }
+}
+
+
+class JSONRequest {
+
+    static var alamofireManager: Alamofire.SessionManager = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 10.0
+        config.timeoutIntervalForResource = 15.0
+        return Alamofire.SessionManager(configuration: config)
+    }()
+
+    static func get(url: URLConvertible, handler: @escaping (Alamofire.DefaultDataResponse) -> Swift.Void) {
+        alamofireManager.request(url).response(completionHandler: handler)
+    }
+    
+    static func put(_ dict: [String: Any], url: URLConvertible, handler: @escaping (Alamofire.DefaultDataResponse) -> Swift.Void) {
+        alamofireManager.request(url, method: .put, parameters: dict, encoding: JSONEncoding.default).response(completionHandler: handler)
+    }
+    
+    static func post(_ dict: [String: Any], url: URLConvertible, handler: @escaping (Alamofire.DefaultDataResponse) -> Swift.Void) {
+        alamofireManager.request(url, method: .post, parameters: dict, encoding: JSONEncoding.default).response(completionHandler: handler)
+    }
+    
+}
+
 class PaymentProvider {
     
     //private static let jsonUrl = "https://api.myjson.com/bins/yax4f"
     //private static let metaJsonUrl = "https://api.myjson.com/bins/12vg1f"
+    static let baseURL = "https://api.myjson.com/bins"
     
     static let shared = PaymentProvider()    
     let metadata = Metadata()
     
     var root: Payment = Payment()
     var isBusy = false
+    
+    static func url(id: String) -> String {
+        return "\(PaymentProvider.baseURL)/\(id)"
+    }
     
     class Metadata {
         
@@ -39,21 +91,21 @@ class PaymentProvider {
             return AppSettings.shared.listId
         }
         
-        static func url(id: String) -> String {
-            return "https://api.myjson.com/bins/\(id)"
+        var current: JSON {
+            return Metadata.toJSON(paymentsId: (last?["paymentsId"].string ?? ""))
         }
         
-        var current: JSON {
+        static func toJSON(paymentsId: String) -> JSON {
             let dict: [String: Any] = [
                 "lastUpload": [
                     "timestamp": Date().timeIntervalSince1970,
                     "user": UIDevice.current.name,
                 ],
-                "paymentsId": (last?["paymentsId"].string ?? "")
+                "paymentsId": paymentsId
             ]
             return JSON(dict)
         }
-        
+
         func download(completion: @escaping (SyncStatus, JSON?) -> ()) {
             
             guard listId != "" else {
@@ -61,7 +113,7 @@ class PaymentProvider {
                 return
             }
             
-            Alamofire.request(Metadata.url(id: listId)).response { response in
+            JSONRequest.get(url: PaymentProvider.url(id: listId)) { response in
                 print("Downloaded metadata")
                 
                 if let code = response.response?.statusCode, code != 200 {
@@ -89,7 +141,7 @@ class PaymentProvider {
                 return
             }
             
-            Alamofire.request(Metadata.url(id: listId), method: .put, parameters: dict, encoding: JSONEncoding.default).response { response in
+            JSONRequest.put(dict, url: PaymentProvider.url(id: listId)) { response in
             
                 if response.error == nil {
                     print("Uploaded metadata")
@@ -112,7 +164,7 @@ class PaymentProvider {
             completion(.busyError)
             return
         }
-        
+                
         isBusy = true
         
         let finish = { [weak self] (status: SyncStatus) in
@@ -127,7 +179,7 @@ class PaymentProvider {
                 return
             }
             
-            Alamofire.request(Metadata.url(id: paymentsId)).response { response in
+            JSONRequest.get(url: PaymentProvider.url(id: paymentsId)) { response in
                 if let code = response.response?.statusCode, code != 200 {
                     print("Error: \(response.error)")
                     completion(.errorCode(code))
@@ -191,7 +243,7 @@ class PaymentProvider {
                 return
             }
             
-            Alamofire.request(Metadata.url(id: paymentsId), method: .put, parameters: strongSelf.root.toDictionary(), encoding: JSONEncoding.default).response { [weak self] response in
+            JSONRequest.put(strongSelf.root.toDictionary(), url: PaymentProvider.url(id: paymentsId)) { [weak self] response in
                 
                 if response.error != nil {
                     print("error from Alamofire put request")
@@ -252,6 +304,68 @@ class PaymentProvider {
             if remoteTime <= localTime {
                 uploadPayments(paymentsId)
             }
+        }
+    }
+    
+    private func createNewList(dict: [String: Any], completion: @escaping (String?) -> ()) {
+        
+        guard let url = URL(string: PaymentProvider.baseURL) else {
+            print("Cannot convert base URL to URL")
+            completion(nil)
+            return
+        }
+        
+        JSONRequest.post(dict, url: url) { response in
+            
+            guard response.error == nil,
+                let responseData = response.data,
+                let responseString = String(data: responseData, encoding: String.Encoding.utf8),
+                let responseDict = JSON(parseJSON: responseString).dictionaryObject,
+                let newIdUri = responseDict["uri"] as? String,
+                let newListId = URL(string: newIdUri)?.lastPathComponent else {
+                    print("Could not create list")
+                    completion(nil)
+                    return
+            }
+            
+            completion(newListId)
+        }
+    }
+    
+    func createNewPaymentsList(completion: @escaping (String?) -> ()) {
+        
+        let emptyPaymentsDict: [String: Any] = ["root": [:]]
+        
+        createNewList(dict: emptyPaymentsDict) { [weak self] listId in
+            
+            guard let strongSelf = self,
+                let listId = listId else {
+                print("No self or no list ID...")
+                completion(nil)
+                return
+            }
+            
+            strongSelf.createMetadata(paymentsId: listId, completion: completion)
+        }
+    }
+    
+    private func createMetadata(paymentsId: String, completion: @escaping (String?) -> ()) {
+        
+        guard let metadataDict = Metadata.toJSON(paymentsId: paymentsId).dictionaryObject else {
+            print("Metadata not a dictionary")
+            completion(nil)
+            return
+        }
+        
+        createNewList(dict: metadataDict) { listId in
+            
+            guard let listId = listId else {
+                print("No self or no list ID...")
+                completion(nil)
+                return
+            }
+            
+            completion(listId)
         }
     }
 }

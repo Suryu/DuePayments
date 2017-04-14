@@ -11,6 +11,7 @@ import UIKit
 
 extension UIAlertAction {
     static let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+    static let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 }
 
 extension UIAlertController {

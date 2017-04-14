@@ -16,6 +16,7 @@ class PaymentsTableViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var refreshControl: UIRefreshControl!
     
+    var currentListId: String?
     var path: [String] = []
     var payment: Payment? {
         return PaymentProvider.shared.root.getPayment(atPath: path)
@@ -40,10 +41,6 @@ class PaymentsTableViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "PullToRefresh".localized)
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
-        
-        if path.isEmpty {
-            fetchPayments()
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +49,19 @@ class PaymentsTableViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        paymentsUpdated(upload: false)
+        let doUpload = { [weak self] in
+            self?.paymentsUpdated(upload: false)
+        }
+        
+        if currentListId != AppSettings.shared.listId {
+            fetchPayments() { status in
+                if case .ok = status {
+                    doUpload()
+                }
+            }
+        } else {
+            doUpload()
+        }
     }
     
     func refresh(_ sender:AnyObject) {
@@ -160,7 +169,7 @@ extension PaymentsTableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func fetchPayments(showIndicator: Bool = true) {
+    func fetchPayments(showIndicator: Bool = true, completion: ((SyncStatus) -> ())? = nil) {
         if showIndicator {
             activityIndicator.startAnimating()
         }
@@ -169,29 +178,20 @@ extension PaymentsTableViewController {
             
             self?.activityIndicator.stopAnimating()
             self?.refreshControl.endRefreshing()
-                        
-            switch status {
-            case .busyError, .ok:
-                break
-            case .listIdNotEntered:
-                UIAlertController(errorMessage: "ListIdNotEntered".localized).present()
-                return
-            case .isNotValid:
-                UIAlertController(errorMessage: "ListInvalid".localized).present()
-                return
-            case .errorCode(404), .errorCode(500):
-                UIAlertController(errorMessage: "ListDoesNotExist".localized).present()
-                return
-            default:
-                UIAlertController(errorMessage: "CouldNotDownloadPayments".localized).present()
+            
+            if let msg = status.errorMessage {
+                let errorMsg = (msg != SyncStatus.genericError ? msg : "CouldNotDownloadPayments".localized)
+                UIAlertController(errorMessage: errorMsg).present()
+                completion?(status)
                 return
             }
             
-            self?.paymentsUpdated(upload: false)
+            self?.currentListId = AppSettings.shared.listId
+            self?.paymentsUpdated(upload: false, completion: completion)
         }
     }
     
-    func paymentsUpdated(upload: Bool = true) {
+    func paymentsUpdated(upload: Bool = true, completion: ((SyncStatus) -> ())? = nil) {
         
         if path.isEmpty {
             title = "Payments".localized
@@ -202,30 +202,22 @@ extension PaymentsTableViewController {
         tableView.reloadData()
         
         if upload && AppSettings.shared.generalSettings[.updateAfterEachChange] {
-            uploadPayments()
+            uploadPayments(completion: completion)
+        } else {
+            completion?(.ok)
         }
     }
     
-    func uploadPayments(finished: (() -> ())? = nil) {
-        startBlockingTask()
+    func uploadPayments(completion: ((SyncStatus) -> ())? = nil) {
+        startBlockingActivity()
         
         PaymentProvider.shared.upload() { [weak self] status in
-            self?.stopBlockingTask()
+            self?.stopBlockingActivity()
             
-            switch status {
-            case .busyError, .ok:
-                break
-            case .listIdNotEntered:
-                UIAlertController(errorMessage: "ListIdNotEntered".localized).present()
-                return
-            case .isNotValid:
-                UIAlertController(errorMessage: "ListInvalid".localized).present()
-                return
-            case .errorCode(404), .errorCode(500):
-                UIAlertController(errorMessage: "ListDoesNotExist".localized).present()
-                return
-            default:
-                UIAlertController(errorMessage: "CouldNotDownloadPayments".localized).present()
+            if let msg = status.errorMessage {
+                let errorMsg = (msg != SyncStatus.genericError ? msg : "CouldNotUploadPayments".localized)
+                UIAlertController(errorMessage: errorMsg).present()
+                completion?(status)
                 return
             }
             
@@ -240,36 +232,8 @@ extension PaymentsTableViewController {
                 _ = navigationController.popViewController(animated: true)
             }
             
-            finished?()
+            completion?(.ok)
         }
-    }
-    
-    func startBlockingTask() {
-        guard UIApplication.shared.keyWindow?.viewWithTag(1) == nil else {
-            // already loading
-            return
-        }
-        
-        let view = UIView(frame: UIScreen.main.bounds)
-        view.backgroundColor = UIColor.black
-        view.alpha = 0.6
-        view.tag = 1
-        let loader = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        loader.hidesWhenStopped = true
-        loader.startAnimating()
-        loader.tag = 2
-        loader.sizeToFit()
-        loader.center = view.center
-        view.addSubview(loader)
-        UIApplication.shared.keyWindow?.addSubview(view)
-    }
-    
-    func stopBlockingTask() {
-        let view = UIApplication.shared.keyWindow?.viewWithTag(1)
-        let indicator = UIApplication.shared.keyWindow?.viewWithTag(2) as? UIActivityIndicatorView
-        indicator?.stopAnimating()
-        
-        view?.removeFromSuperview()
     }
 }
 

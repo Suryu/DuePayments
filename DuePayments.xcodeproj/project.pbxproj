@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		471BDED61E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471BDED51E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift */; };
 		471C71FF1E8FC57B000C2C39 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 471C72011E8FC57B000C2C39 /* Localizable.strings */; };
 		471C72041E8FE085000C2C39 /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471C72031E8FE085000C2C39 /* StringExt.swift */; };
 		471C72061E8FE08D000C2C39 /* DoubleExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471C72051E8FE08D000C2C39 /* DoubleExt.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		471BDED51E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PickerLayerVC+Instantiation.swift"; sourceTree = "<group>"; };
 		471C71FB1E8FBFDF000C2C39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		471C71FE1E8FC479000C2C39 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
 		471C72001E8FC57B000C2C39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				471C72051E8FE08D000C2C39 /* DoubleExt.swift */,
 				473CBE581E916EA40060CC68 /* DictionaryExt.swift */,
 				473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */,
+				471BDED51E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift */,
 			);
 			name = Helpers/Extensions;
 			sourceTree = "<group>";
@@ -422,6 +425,7 @@
 				471C72041E8FE085000C2C39 /* StringExt.swift in Sources */,
 				47228E1D1E8EC02600C261F9 /* PaymentCell.swift in Sources */,
 				47228E1F1E8ECD4900C261F9 /* DictionaryMappable.swift in Sources */,
+				471BDED61E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift in Sources */,
 				47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */,
 				473CBE591E916EA40060CC68 /* DictionaryExt.swift in Sources */,
 				47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */,

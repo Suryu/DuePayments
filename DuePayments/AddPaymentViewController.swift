@@ -48,7 +48,6 @@ class AddPaymentViewController: UITableViewController {
         return parents
     }
     var currentParentRow = 0
-    var picker: PickerLayerViewController?
     
     var hasSubpayments: Bool {
         return editedPayment.payments.count > 0
@@ -96,7 +95,6 @@ class AddPaymentViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         doneButton.isEnabled = validate()
-        picker = PickerLayerViewController.instantiate(storyboard: "Main", identifier: "pickerLayer")
         
         if availableParents.count > 0 {
             parentPaymentNameLabel.text = availableParents[0]
@@ -108,33 +106,17 @@ class AddPaymentViewController: UITableViewController {
     }
     
     @IBAction func chooseParentPaymentTap(_ sender: UIButton) {
-        guard let picker = picker else {
-            return
-        }
         view.endEditing(true)
+        
+        let picker = PickerLayerViewController.instantiate()
         picker.options = availableParents
         picker.callback = { [weak self] index, option in
             self?.currentParentRow = index
             self?.parentPaymentNameLabel.text = self?.availableParents[index]
-            self?.picker?.view.removeFromSuperview()
-            self?.picker?.removeFromParentViewController()
+            picker.close()
         }
         
-        //picker.view.center.y = UIScreen.main.bounds.size.height / 2
-//        picker.view.frame.origin.y = 0.0
-            //picker.view.center.y -= navigationController?.navigationBar.frame.size.height ?? 0.0
-        
-        if let parentViewController = UIApplication.shared.keyWindow?.rootViewController {
-            
-            picker.willMove(toParentViewController: parentViewController)
-            picker.beginAppearanceTransition(true, animated: true)
-            parentViewController.view.addSubview(picker.view)
-            picker.endAppearanceTransition()
-            parentViewController.addChildViewController(picker)
-            picker.didMove(toParentViewController: parentViewController)
-            
-            parentViewController.view.bringSubview(toFront: picker.view)
-        }
+        picker.show()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

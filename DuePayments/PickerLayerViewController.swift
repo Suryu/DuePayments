@@ -17,10 +17,6 @@ class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     @IBOutlet weak var picker: UIPickerView!
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        print("tapped")
-//    }
-    
     override func viewDidLoad() {
         picker.dataSource = self
         picker.delegate = self

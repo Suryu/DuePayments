@@ -27,3 +27,9 @@
 "ListIdNotEntered" = "List identifier not set. Please enter an identifier in settings tab.";
 "ListInvalid" = "List with given identifier is not valid.";
 "ListDoesNotExist" = "List with given identifier does not exist.";
+"CouldNotCreatePayments" = "Could not create new payments list.";
+"ListCreated" = "List created";
+"SetListNameMessage" = "Set name for your new list:";
+"Cancel" = "Cancel";
+"List" = "List";
+"ListNamePlaceholder" = "Enter list name";

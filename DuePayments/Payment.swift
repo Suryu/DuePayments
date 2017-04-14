@@ -11,6 +11,7 @@ import SwiftyJSON
 
 struct Payment: DictionaryMappable {
     
+    var id: Int = 0
     var name: String = ""
     var payments: [Payment] = []
     var value = 0.0
@@ -19,6 +20,18 @@ struct Payment: DictionaryMappable {
             return result + payment.totalValue
         }
     }
+
+    private static var idCounter: Int = 0
+    
+    static func setCurrent(id: Int) {
+        idCounter = id
+    }
+    
+    static func nextId() -> Int {
+        idCounter += 1
+        return idCounter
+    }
+    
     
     init() {
         
@@ -37,16 +50,21 @@ struct Payment: DictionaryMappable {
     }
     
     mutating func fromDictionary(_ dict: [String: Any]) {
+        id <-- (dict["id"] ?? Payment.nextId())
         name <-- dict["name"]
         payments <-- dict["payments"]
         value <-- dict["value"]
+        
+        Payment.idCounter = max(id, Payment.idCounter)
     }
     
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
+        id --> dict["id"]
         name --> dict["name"]
         payments --> dict["payments"]
         value --> dict["value"]
+        
         return dict
     }
     

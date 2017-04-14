@@ -13,6 +13,9 @@ import SwiftyJSON
 class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     // TODO:
+    // * list identifiers list
+    // * list names
+    // * allow non-unique names (use identifiers for entries?)
     // * currency choosing
     // * myjson.com addresses
     //     provide metadata address (which would also contain payments address)
@@ -61,15 +64,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         lastUpdateInfo.text = "\("LastUpdate".localized): \(dateString) (\(user))"
     }
     
-    @IBAction func updateAfterEachChangeSwitched(_ sender: UISwitch) {
-        AppSettings.shared.generalSettings[.updateAfterEachChange] = autoUpdateSwitch.isOn
-        AppSettings.shared.generalSettings.store()
-    }
-    
-    @IBAction func listIdentifierHelpTapped(_ sender: UIButton) {
-        UIAlertController(title: "ListIdentifier".localized, message: "ListIdentifierDescription".localized).present()
-    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == listIdTextField {
             if let listId = textField.text, textField.text != "" {
@@ -81,5 +75,73 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         
         return true
+    }
+}
+
+// MARK: IBActions
+
+extension SettingsTableViewController {
+
+    @IBAction func updateAfterEachChangeSwitched(_ sender: UISwitch) {
+        AppSettings.shared.generalSettings[.updateAfterEachChange] = autoUpdateSwitch.isOn
+        AppSettings.shared.generalSettings.store()
+    }
+    
+    @IBAction func listIdentifierHelpTapped(_ sender: UIButton) {
+        UIAlertController(title: "ListIdentifier".localized, message: "ListIdentifierDescription".localized).present()
+    }
+    
+    @IBAction func createNewListTapped(_ sender: UIButton) {
+        
+        startBlockingActivity()
+        PaymentProvider.shared.createNewPaymentsList { [weak self] listId in
+            
+            self?.stopBlockingActivity()
+            
+            guard let listId = listId else {
+                UIAlertController(errorMessage: "CouldNotCreatePayments".localized).present()
+                return
+            }
+            
+            let alert = UIAlertController(title: "ListCreated".localized,
+                                          message: String(format: "SetListNameMessage".localized, listId),
+                                          preferredStyle: .alert)
+            
+            let addAction = UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+                var listName = alert.textFields?.first?.text ?? listId
+                if listName == "" {
+                    listName = listId
+                }
+                    
+                self?.listIdTextField.text = listId
+                AppSettings.shared.addList(name: listName, listId: listId)
+                AppSettings.shared.listId = listId
+                AppSettings.shared.store()
+            })
+            
+            alert.addAction(addAction)
+            
+            alert.addTextField(configurationHandler: { textField in
+                textField.clearButtonMode = .whileEditing
+                textField.text = "\("List".localized) \(AppSettings.shared.lists.count + 1)"
+                textField.placeholder = "ListNamePlaceholder".localized
+            })
+            
+            alert.present()
+        }
+    }
+    
+    @IBAction func ManageListsTapped(_ sender: UIButton) {
+        
+        let lists = AppSettings.shared.lists
+        let picker = PickerLayerViewController.instantiate()
+        picker.options = Array(lists.keys)
+        picker.callback = { [weak self] index, option in
+            self?.listIdTextField.text = lists[option] ?? ""
+            picker.close()
+            
+        }
+        picker.show()
+        
     }
 }

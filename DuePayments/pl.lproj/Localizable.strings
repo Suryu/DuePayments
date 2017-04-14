@@ -27,3 +27,10 @@
 "ListIdNotEntered" = "Nie ustawiono identyfikatora listy. Podaj identyfikator w ustawieniach.";
 "ListInvalid" = "Lista z podanym identyfikatorem nie jest poprawna.";
 "ListDoesNotExist" = "Lista z podanym identyfikatorem nie istnieje.";
+"CouldNotCreatePayments" = "Nie można było utworzyć nowej listy.";
+"ListCreated" = "Utworzono listę";
+"SetListNameMessage" = "Ustaw nazwę dla nowo utworzonej listy:";
+"Add" = "Dodaj";
+"Cancel" = "Anuluj";
+"List" = "Lista";
+"ListNamePlaceholder" = "Podaj nazwę listy";
