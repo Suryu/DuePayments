@@ -19,13 +19,13 @@ class AddPaymentViewController: UITableViewController {
     }
     
     var actionType: ActionType = .add
-    var path: [String] = []
+    var path: [Int] = []
     var initialName: String = ""
     var editedPayment: Payment = Payment()
     var payment: Payment? {
         return PaymentProvider.shared.root.getPayment(atPath: path)
     }
-    var callback: ((Payment, [String]) -> ())?
+    var callback: ((Payment, [Int]) -> ())?
     
     let currencyPickerDelegate = CurrencyPickerDelegateClass()
     var availableParents: [String] {

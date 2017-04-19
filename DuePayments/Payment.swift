@@ -34,9 +34,10 @@ struct Payment: DictionaryMappable {
     
     
     init() {
-        
+        self.id = Payment.nextId()
     }
     
+    /*
     init(name: String, value: Double) {
         self.name = name
         self.value = value
@@ -47,7 +48,7 @@ struct Payment: DictionaryMappable {
         self.name = name
         self.value = 0.0
         self.payments = payments
-    }
+    }*/
     
     mutating func fromDictionary(_ dict: [String: Any]) {
         id <-- (dict["id"] ?? Payment.nextId())
@@ -68,13 +69,13 @@ struct Payment: DictionaryMappable {
         return dict
     }
     
-    func getPayment(atPath path: [String]) -> Payment? {
+    func getPayment(atPath path: [Int]) -> Payment? {
         guard path.count != 0 else {
             return self
         }
         
         for payment in payments {
-            if payment.name == path[0] {
+            if payment.id == path[0] {
                 return payment.getPayment(atPath: Array(path.dropFirst()))
             }
         }
@@ -83,13 +84,13 @@ struct Payment: DictionaryMappable {
     }
     
     @discardableResult
-    mutating func add(newPayment: Payment, atPath path: [String]) -> Bool {
+    mutating func add(newPayment: Payment, atPath path: [Int]) -> Bool {
         if path.count == 0 {
             payments.append(newPayment)
             return true
         }
         
-        guard let idx = payments.index(where: { $0.name == path[0] }) else {
+        guard let idx = payments.index(where: { $0.id == path[0] }) else {
             print("First path item in \(path) not found.")
             return false
         }
@@ -98,14 +99,14 @@ struct Payment: DictionaryMappable {
     }
     
     @discardableResult
-    mutating func remove(atPath path: [String]) -> Bool {
+    mutating func remove(atPath path: [Int]) -> Bool {
        
         guard path.count != 0 else {
             print("No items specified for removal.")
             return false
         }
         
-        guard let idx = payments.index(where: { $0.name == path[0] }) else {
+        guard let idx = payments.index(where: { $0.id == path[0] }) else {
             print("First path item in \(path) not found.")
             return false
         }
@@ -119,14 +120,14 @@ struct Payment: DictionaryMappable {
     }
     
     @discardableResult
-    mutating func replace(with payment: Payment, atPath path: [String]) -> Bool {
+    mutating func replace(with payment: Payment, atPath path: [Int]) -> Bool {
         
         guard path.count != 0 else {
             print("No items specified for removal.")
             return false
         }
         
-        guard let idx = payments.index(where: { $0.name == path[0] }) else {
+        guard let idx = payments.index(where: { $0.id == path[0] }) else {
             print("First path item in \(path) not found.")
             return false
         }

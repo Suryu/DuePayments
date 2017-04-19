@@ -17,7 +17,7 @@ class PaymentsTableViewController: UIViewController {
     var refreshControl: UIRefreshControl!
     
     var currentListId: String?
-    var path: [String] = []
+    var path: [Int] = []
     var payment: Payment? {
         return PaymentProvider.shared.root.getPayment(atPath: path)
     }
@@ -107,12 +107,12 @@ extension PaymentsTableViewController {
     }
     
     func deleteItem(at index: Int) {
-        guard let name = payment?.payments[index].name else {
+        guard let id = payment?.payments[index].id else {
             return
         }
         
         var pathToRemove = path
-        pathToRemove.append(name)
+        pathToRemove.append(id)
         let removedItem = PaymentProvider.shared.root.remove(atPath: pathToRemove)
         if removedItem == false {
             print("No items removed - path not found?")
@@ -127,7 +127,7 @@ extension PaymentsTableViewController {
             return
         }
         var oldPath = path
-        oldPath.append(payment.payments[index].name)
+        oldPath.append(payment.payments[index].id)
         
         let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
         vc.path = path
@@ -326,7 +326,7 @@ extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSourc
             
             let vc = PaymentsTableViewController.instantiate(storyboard: "Main", identifier: "PaymentsTableViewController")
             vc.path = path
-            vc.path.append(currentPayment.name)
+            vc.path.append(currentPayment.id)
             print(vc.path)
             navigationController?.pushViewController(vc, animated: true)
         }
