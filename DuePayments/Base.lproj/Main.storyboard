@@ -85,7 +85,7 @@
                                     <action selector="addPayment:" destination="BYZ-38-t0r" id="6L1-ff-08u"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="rsz_refresh1600" id="N49-h1-nll">
+                            <barButtonItem image="SynchronizeIcon" id="N49-h1-nll">
                                 <connections>
                                     <action selector="uploadPaymentsTapped:" destination="BYZ-38-t0r" id="3Iq-Kw-VEW"/>
                                 </connections>
@@ -355,7 +355,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
-                            <tableViewSection headerTitle="Main" id="pYm-YZ-MHC">
+                            <tableViewSection headerTitle="List" id="U4E-9Q-F0C">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="94" id="j9R-ir-Tx9">
                                         <rect key="frame" x="0.0" y="28" width="375" height="94"/>
@@ -428,8 +428,12 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="General" id="pYm-YZ-MHC">
+                                <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="74" id="ubw-nj-qsc">
-                                        <rect key="frame" x="0.0" y="122" width="375" height="74"/>
+                                        <rect key="frame" x="0.0" y="150" width="375" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ubw-nj-qsc" id="T0Z-jn-hMz">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
@@ -474,7 +478,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection footerTitle="Author: Paweł Wojtkowiak" id="3zh-Kb-f04">
+                            <tableViewSection headerTitle="Author: Paweł Wojtkowiak" footerTitle="Icons provided by Icons8.com" id="3zh-Kb-f04">
                                 <cells/>
                             </tableViewSection>
                         </sections>
@@ -483,7 +487,7 @@
                             <outlet property="delegate" destination="DS9-CV-MtT" id="k7D-UQ-TuL"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Settings" id="Au1-tq-eXh"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="SettingsIcon" selectedImage="SettingsIconFilled" id="Au1-tq-eXh"/>
                     <connections>
                         <outlet property="autoUpdateSwitch" destination="8BG-01-m5d" id="F9k-OU-xbh"/>
                         <outlet property="lastUpdateInfo" destination="5EM-d8-OxZ" id="tl1-hN-gm2"/>
@@ -495,11 +499,11 @@
             </objects>
             <point key="canvasLocation" x="-1023.2" y="-681.40929535232385"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Payments-->
         <scene sceneID="b4U-oH-m96">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="UbK-0u-S3q" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" id="asx-nV-Bv3"/>
+                    <tabBarItem key="tabBarItem" title="Payments" image="PaymentsIcon" selectedImage="PaymentsIconFilled" id="asx-nV-Bv3"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DCp-Sf-bAw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -517,6 +521,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="rsz_refresh1600" width="25" height="25"/>
+        <image name="PaymentsIcon" width="25" height="25"/>
+        <image name="PaymentsIconFilled" width="25" height="25"/>
+        <image name="SettingsIcon" width="25" height="25"/>
+        <image name="SettingsIconFilled" width="25" height="25"/>
+        <image name="SynchronizeIcon" width="25" height="25"/>
     </resources>
 </document>

@@ -31,7 +31,8 @@
 
 "pYm-YZ-MHC.headerTitle" = "Settings";
 
-"3zh-Kb-f04.footerTitle" = "Author: Paweł Wojtkowiak";
+"3zh-Kb-f04.headerTitle" = "Author: Paweł Wojtkowiak";
+"3zh-Kb-f04.footerTitle" = "Icons provided by Icons8.com";
 
 "eYW-WV-xkq.text" = "Update payments on the server after each change";
 
@@ -42,3 +43,6 @@
 "pRU-MD-6AS.normalTitle" = "Create new list";
 
 "yxh-Kb-fik.normalTitle" = "Manage lists";
+
+"asx-nV-Bv3.title" = "Payments";
+"Au1-tq-eXh.title" = "Settings";
