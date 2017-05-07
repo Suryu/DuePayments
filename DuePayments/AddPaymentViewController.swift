@@ -9,6 +9,45 @@
 import Foundation
 import UIKit
 
+enum PaymentParentType {
+    case normal
+    case current
+    case moveUp
+}
+
+struct PaymentParent {
+    var id: Int
+    var path: [Int]
+    var displayedName: String
+    var type: PaymentParentType
+    
+    init(id: Int, path: [Int], displayedName: String, type: PaymentParentType = .normal) {
+        self.id = id
+        self.path = path
+        self.displayedName = displayedName
+        self.type = type
+    }
+    
+    static func current(with payment: Payment, path: [Int]) -> PaymentParent {
+        let currentPaymentName = payment.isRoot ? "-" : "\("Current".localized) (\(payment.displayName))"
+        return PaymentParent(id: payment.id,
+                             path: path,
+                             displayedName: currentPaymentName,
+                             type: .current)
+    }
+    
+    static func moveUp(with payment: Payment, path: [Int]) -> PaymentParent {
+        var displayedName = "\("Move up".localized)"
+        if !payment.isRoot {
+            displayedName += " (\(payment.displayName))"
+        }
+        return PaymentParent(id: payment.id,
+                             path: path,
+                             displayedName: displayedName,
+            type: .moveUp)
+    }
+}
+
 class AddPaymentViewController: UITableViewController {
     
     static let DefaultRowHeight = 50.0
@@ -19,38 +58,20 @@ class AddPaymentViewController: UITableViewController {
     }
     
     var actionType: ActionType = .add
-    var path: [Int] = []
-    var initialName: String = ""
-    var editedPayment: Payment = Payment()
-    var payment: Payment? {
-        return PaymentProvider.shared.root.getPayment(atPath: path)
+    var payment: Payment?
+    
+    var parentPath: [Int] = []
+    var parentPayment: Payment? {
+        return PaymentProvider.shared.root.getPayment(atPath: parentPath)
     }
-    var callback: ((Payment, [Int]) -> ())?
+    var action: ((Payment, [Int]) -> ())?
     
     let currencyPickerDelegate = CurrencyPickerDelegateClass()
-    var availableParents: [String] {
-        var prettyName = (payment?.name ?? "None".localized)
-        if prettyName == "root" {
-            prettyName = "None".localized
-        }
-        
-        var parents = ["<\(prettyName)>"]
-        parents.append(contentsOf: payment?.payments.map { $0.name } ?? [])
-        
-        if actionType == .edit {
-            if let idx = parents.index(of: initialName) {
-                parents.remove(at: idx)
-            }
-            if path.count > 0 {
-                parents.insert("<\("MoveUp".localized)>", at: 1)
-            }
-        }
-        return parents
-    }
-    var currentParentRow = 0
+    var availableParents: [PaymentParent] = []
+    var currentParentIndex: Int = 0
     
     var hasSubpayments: Bool {
-        return editedPayment.payments.count > 0
+        return payment?.hasSubpayments ?? false
     }
     
     var rowsVisibility: [Bool] {
@@ -64,6 +85,7 @@ class AddPaymentViewController: UITableViewController {
         return defaultHeights
     }
     
+    @IBOutlet weak var chooseSubpaymentButton: UIButton!
     @IBOutlet weak var priceCell: UITableViewCell!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var priceTextField: UITextField!
@@ -78,15 +100,16 @@ class AddPaymentViewController: UITableViewController {
         nameTextField.delegate = self
         priceTextField.delegate = self
         
-        if actionType == .edit {
+        if let payment = payment,
+            actionType == .edit {
+            
             let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
+            formatter.numberStyle = .none
             
-            initialName = editedPayment.name
-            nameTextField.text = editedPayment.name
+            nameTextField.text = payment.name
             
-            if editedPayment.payments.count == 0 {
-                priceTextField.text = formatter.string(from: NSNumber(value: editedPayment.value))
+            if !payment.hasSubpayments {
+                priceTextField.text = formatter.string(from: NSNumber(value: payment.value))
             }
             
             priceCell.isHidden = hasSubpayments
@@ -97,8 +120,10 @@ class AddPaymentViewController: UITableViewController {
         doneButton.isEnabled = validate()
         
         if availableParents.count > 0 {
-            parentPaymentNameLabel.text = availableParents[0]
+            parentPaymentNameLabel.text = availableParents.first?.displayedName ?? "-"
         }
+        
+        chooseSubpaymentButton.isHidden = (availableParents.count < 2)
     }
     
     @IBAction func nameDidChange(_ sender: UITextField) {
@@ -109,10 +134,17 @@ class AddPaymentViewController: UITableViewController {
         view.endEditing(true)
         
         let picker = PickerLayerViewController.instantiate()
-        picker.options = availableParents
-        picker.callback = { [weak self] index, option in
-            self?.currentParentRow = index
-            self?.parentPaymentNameLabel.text = self?.availableParents[index]
+        for parent in availableParents {
+            picker.options.append(PickerOption(title: parent.displayedName, object: parent, bolded: parent.type != .normal))
+        }
+        picker.defaultOptionIndex = currentParentIndex
+        picker.callback = { [weak self] object in
+            guard let object = object as? PaymentParent,
+                let idx = self?.availableParents.index(where: { $0.id == object.id }) else {
+                fatalError("object not a payment. WTF?")
+            }
+            self?.currentParentIndex = idx
+            self?.parentPaymentNameLabel.text = self?.availableParents[idx].displayedName
             picker.close()
         }
         
@@ -129,8 +161,8 @@ class AddPaymentViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var result = "Details".localized
-        if initialName != "" {
-            result += " (\(initialName))"
+        if let payment = payment {
+            result += " (\(payment.name))"
         }
         return result
     }
@@ -171,29 +203,32 @@ extension AddPaymentViewController {
             return
         }
         
-        var childPath = path
+        if actionType == .add {
+            payment = Payment.new()
+        }
+        
+        guard var editedPayment = payment else {
+            return
+        }
+        
+        let parent = availableParents[currentParentIndex]
         
         editedPayment.name = nameTextField.text ?? ""
         editedPayment.value = priceTextField.text?.toPriceValue() ?? 0.0
         
-        if (currentParentRow != 0) {
-            if actionType == .edit && currentParentRow == 1 && path.count > 0 {
-                childPath.removeLast()
-            } else {
-                childPath.append(availableParents[currentParentRow])
-            }
+        var didChange = true
+        if let payment = payment,
+            editedPayment.name == payment.name,
+            editedPayment.value == payment.value,
+            parent.type == .current {
+            didChange = false
+        }
+    
+        if didChange {
+            payment = editedPayment
+            action?(payment!, parent.path)
         }
         
-        if actionType == .add {
-            var nodePath = childPath
-            nodePath.append(editedPayment.name)
-            guard PaymentProvider.shared.root.getPayment(atPath: nodePath) == nil else {
-                UIAlertController(errorMessage: "PaymentExists".localized).present()
-                return
-            }
-        }
-        
-        callback?(editedPayment, childPath)
         _ = navigationController?.popViewController(animated: true)
     }
     

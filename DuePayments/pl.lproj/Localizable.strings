@@ -10,7 +10,7 @@
 "MoveUp" = "Przenieś wyżej";
 "Error" = "Błąd";
 "PaymentsNotUpToDate" = "Płatności nie są aktualne - odśwież, by zsynchronizować z serwerem.";
-"PaymentExists" = "Płatność z taką nazwą już istnieje.";
+"PaymentExists" = "Płatność z takim identyfikatorem już istnieje.";
 "Edit" = "Edytuj";
 "Delete" = "Usuń";
 "PullToRefresh" = "Pociągnij, aby odświeżyć";
@@ -28,9 +28,11 @@
 "ListInvalid" = "Lista z podanym identyfikatorem nie jest poprawna.";
 "ListDoesNotExist" = "Lista z podanym identyfikatorem nie istnieje.";
 "CouldNotCreatePayments" = "Nie można było utworzyć nowej listy.";
-"ListCreated" = "Utworzono listę";
-"SetListNameMessage" = "Ustaw nazwę dla nowo utworzonej listy:";
+"NewList" = "Nowa lista";
+"EnterListName" = "Podaj nazwę nowej listy";
 "Add" = "Dodaj";
 "Cancel" = "Anuluj";
 "List" = "Lista";
 "ListNamePlaceholder" = "Podaj nazwę listy";
+"Current" = "Bieżący";
+"Move up" = "Przenieś wyżej";

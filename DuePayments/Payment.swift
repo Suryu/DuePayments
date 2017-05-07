@@ -13,6 +13,9 @@ struct Payment: DictionaryMappable {
     
     var id: Int = 0
     var name: String = ""
+    var displayName: String {
+        return isRoot ? "None".localized : name
+    }
     var payments: [Payment] = []
     var value = 0.0
     var totalValue: Double {
@@ -20,21 +23,35 @@ struct Payment: DictionaryMappable {
             return result + payment.totalValue
         }
     }
+    var hasSubpayments: Bool {
+        return payments.count > 0
+    }
+    var isRoot: Bool {
+        return id == 0
+    }
 
     private static var idCounter: Int = 0
     
-    static func setCurrent(id: Int) {
-        idCounter = id
+    static func newRoot() -> Payment {
+        var payment = Payment()
+        payment.id = 0
+        payment.name = "root"
+        return payment
     }
     
     static func nextId() -> Int {
-        idCounter += 1
+        defer { idCounter += 1 }
         return idCounter
     }
     
+    static func new() -> Payment {
+        var payment = Payment()
+        payment.id = idCounter
+        idCounter += 1
+        return payment
+    }
     
-    init() {
-        self.id = Payment.nextId()
+    init() {        
     }
     
     /*
@@ -56,7 +73,7 @@ struct Payment: DictionaryMappable {
         payments <-- dict["payments"]
         value <-- dict["value"]
         
-        Payment.idCounter = max(id, Payment.idCounter)
+        Payment.idCounter = max(id + 1, Payment.idCounter)
     }
     
     func toDictionary() -> [String: Any] {
@@ -67,6 +84,27 @@ struct Payment: DictionaryMappable {
         value --> dict["value"]
         
         return dict
+    }
+    
+    func findPath(forId id: Int, searchIn currentPath: [Int] = []) -> [Int]? {
+        var result: [Int]?
+        
+        payments.forEach {
+            if $0.id == id {
+                result = currentPath
+                result?.append(id)
+                return
+            } else if $0.payments.count > 0 {
+                var subpath = currentPath
+                subpath.append($0.id)
+                if let findResult = findPath(forId: id, searchIn: subpath) {
+                    result = findResult
+                    return
+                }
+            }
+        }
+        
+        return result
     }
     
     func getPayment(atPath path: [Int]) -> Payment? {

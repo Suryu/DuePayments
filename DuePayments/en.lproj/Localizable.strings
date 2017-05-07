@@ -10,7 +10,7 @@
 "MoveUp" = "Move Up";
 "Error" = "Error";
 "PaymentsNotUpToDate" = "Payments are not up to date - refresh to synchronize with the server.";
-"PaymentExists" = "Payment with this name already exists.";
+"PaymentExists" = "Payment with this identifier already exists.";
 "Edit" = "Edit";
 "Delete" = "Delete";
 "PullToRefresh" = "Pull to refresh";
@@ -28,8 +28,10 @@
 "ListInvalid" = "List with given identifier is not valid.";
 "ListDoesNotExist" = "List with given identifier does not exist.";
 "CouldNotCreatePayments" = "Could not create new payments list.";
-"ListCreated" = "List created";
-"SetListNameMessage" = "Set name for your new list:";
+"NewList" = "New list";
+"EnterListName" = "Enter name for your new list";
 "Cancel" = "Cancel";
 "List" = "List";
 "ListNamePlaceholder" = "Enter list name";
+"Current" = "Current";
+"Move up" = "Move up";

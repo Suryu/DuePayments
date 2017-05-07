@@ -11,7 +11,6 @@ import Foundation
 extension DefaultsKeys {
     static let updateAfterEachChange = DefaultsKey<Bool?>("updateAfterEachChange")
     static let listId = DefaultsKey<String?>("listIdentifier")
-    static let lists = DefaultsKey<[String: Any]>("lists")
 }
 
 // MARK: GeneralSettings
@@ -36,17 +35,23 @@ final class AppSettings {
     
     static let shared = AppSettings()
     var generalSettings: GeneralSettings = [.updateAfterEachChange]
-    var lists: [String: String] = [:]
+    var lists: [PaymentListEntity] = []
     var listId = ""
+    var incrementer: Int = 0
     
     func addList(name: String, listId: String) {
-        lists[name] = listId
+        // old way
+        //lists[name] = listId
+        // new way
+        PaymentListsModel.shared.add(listID: listId, name: name)
+        loadLists()
     }
     
     func store() {
         generalSettings.store()
         
-        Defaults[.lists] = lists as [String: Any]
+        // old way
+        //Defaults[.lists] = lists as [String: Any]
         Defaults[.listId] = listId
     }
     
@@ -54,7 +59,13 @@ final class AppSettings {
         generalSettings.load()
         
         listId = Defaults[.listId] ?? ""
-        lists = Defaults[.lists] as! [String: String]
+        loadLists()
+    }
+    
+    func loadLists() {
+        lists = PaymentListsModel.shared.load()
+        
+        print("Loaded lists: \(lists)")
     }
 }
 

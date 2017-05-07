@@ -69,6 +69,9 @@ class JSONRequest {
 
 class PaymentProvider {
     
+    // DEBUG OPTION
+    static let allowUploads = true
+    
     //private static let jsonUrl = "https://api.myjson.com/bins/yax4f"
     //private static let metaJsonUrl = "https://api.myjson.com/bins/12vg1f"
     static let baseURL = "https://api.myjson.com/bins"
@@ -76,7 +79,7 @@ class PaymentProvider {
     static let shared = PaymentProvider()    
     let metadata = Metadata()
     
-    var root: Payment = Payment()
+    var root: Payment = Payment.newRoot()
     var isBusy = false
     
     static func url(id: String) -> String {
@@ -85,20 +88,20 @@ class PaymentProvider {
     
     class Metadata {
         
-        var last: JSON?
+        var current: JSON?
         
         var listId: String {
             return AppSettings.shared.listId
         }
         
-        var current: JSON {
-            return Metadata.toJSON(paymentsId: (last?["paymentsId"].string ?? ""))
+        func generate() -> JSON {
+            return Metadata.toJSON(paymentsId: (current?["paymentsId"].string ?? ""))
         }
         
         static func toJSON(paymentsId: String) -> JSON {
             let dict: [String: Any] = [
                 "lastUpload": [
-                    "timestamp": Date().timeIntervalSince1970,
+                    "timestamp": Double(Int(Date().timeIntervalSince1970)),
                     "user": UIDevice.current.name,
                 ],
                 "paymentsId": paymentsId
@@ -117,40 +120,48 @@ class PaymentProvider {
                 print("Downloaded metadata")
                 
                 if let code = response.response?.statusCode, code != 200 {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.errorCode(code), nil)
                 } else if let data = response.data,
                     let jsonString = String(data: data, encoding: String.Encoding.utf8) {
-                    completion(.ok, JSON(parseJSON: jsonString))
+                    let json = JSON(parseJSON: jsonString)
+                    completion(.ok, json)
                 } else {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.error, nil)
                 }
             }
         }
         
         func upload(completion: @escaping (SyncStatus, JSON?) -> ()) {
+            guard PaymentProvider.allowUploads else {
+                completion(.ok, nil)
+                return
+            }
+            
             guard listId != "" else {
                 completion(.listIdNotEntered, nil)
                 return
             }
             
-            guard let dict = current.dictionaryObject else {
+            let json = generate()
+            
+            guard let dict = json.dictionaryObject else {
                 print("invalid metadata for upload")
                 completion(.error, nil)
                 return
             }
             
             JSONRequest.put(dict, url: PaymentProvider.url(id: listId)) { response in
-            
+                
                 if response.error == nil {
                     print("Uploaded metadata")
                     completion(.ok, JSON(dict))
                 } else if let code = response.response?.statusCode {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.errorCode(code), nil)
                 } else {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.error, nil)
                 }
                 
@@ -181,14 +192,14 @@ class PaymentProvider {
             
             JSONRequest.get(url: PaymentProvider.url(id: paymentsId)) { response in
                 if let code = response.response?.statusCode, code != 200 {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.errorCode(code))
                 } else if let data = response.data,
                     let jsonString = String(data: data, encoding: String.Encoding.utf8) {
                     strongSelf.root = Payment(jsonString: jsonString)
                     finish(.ok)
                 } else {
-                    print("Error: \(response.error)")
+                    print("Error: \(String(describing: response.error))")
                     completion(.error)
                 }
             }
@@ -211,12 +222,17 @@ class PaymentProvider {
                 return
             }
             
-            self?.metadata.last = json
             downloadPayments(paymentsId)
+            self?.metadata.current = json
         }
     }
     
     func upload(completion: @escaping (SyncStatus) -> ()) {
+        guard PaymentProvider.allowUploads else {
+            completion(.ok)
+            return
+        }
+        
         guard !isBusy else {
             completion(.busyError)
             return
@@ -229,7 +245,7 @@ class PaymentProvider {
             completion(status)
         }
         
-        guard metadata.last != nil else {
+        guard metadata.current != nil else {
             UIAlertController(errorMessage: "PaymentsNotUpToDate".localized).present()
             finish(.error)
             return
@@ -245,7 +261,7 @@ class PaymentProvider {
             
             JSONRequest.put(strongSelf.root.toDictionary(), url: PaymentProvider.url(id: paymentsId)) { [weak self] response in
                 
-                if response.error != nil {
+                guard response.error == nil else {
                     print("error from Alamofire put request")
                     finish(.error)
                     return
@@ -265,7 +281,7 @@ class PaymentProvider {
                         return
                     }
                     
-                    self?.metadata.last = uploadedMd
+                    self?.metadata.current = uploadedMd
                     finish(.ok)
                 }
             }
@@ -289,7 +305,7 @@ class PaymentProvider {
                 return
             }
             
-            guard let localTime = self?.metadata.last?["lastUpload"]["timestamp"].double else {
+            guard let localTime = self?.metadata.current?["lastUpload"]["timestamp"].double else {
                 print("no timestamp in last download metadata")
                 finish(.isNotValid)
                 return
@@ -303,6 +319,11 @@ class PaymentProvider {
             
             if remoteTime <= localTime {
                 uploadPayments(paymentsId)
+                self?.metadata.current = md
+            } else {
+                finish(.ok)
+                print("remote is newer: \(remoteTime) > \(localTime)")
+                UIAlertController(errorMessage: "PaymentsNotUpToDate".localized).present()
             }
         }
     }
@@ -334,7 +355,7 @@ class PaymentProvider {
     
     func createNewPaymentsList(completion: @escaping (String?) -> ()) {
         
-        let emptyPaymentsDict: [String: Any] = ["root": [:]]
+        let emptyPaymentsDict: [String: Any] = Payment.newRoot().toDictionary()
         
         createNewList(dict: emptyPaymentsDict) { [weak self] listId in
             

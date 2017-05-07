@@ -28,10 +28,14 @@
 		47228E311E8EF30200C261F9 /* PaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E301E8EF30200C261F9 /* PaymentProvider.swift */; };
 		47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */; };
 		47228E361E8F06EA00C261F9 /* UIViewControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47228E351E8F06EA00C261F9 /* UIViewControllerExt.swift */; };
+		47304F111EA90C0200398683 /* ArrayExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47304F101EA90C0200398683 /* ArrayExt.swift */; };
 		473CBE511E9130A30060CC68 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE501E9130A30060CC68 /* AppSettings.swift */; };
 		473CBE571E9169990060CC68 /* SwiftyUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE561E9169990060CC68 /* SwiftyUserDefaults.swift */; };
 		473CBE591E916EA40060CC68 /* DictionaryExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CBE581E916EA40060CC68 /* DictionaryExt.swift */; };
 		473EA5AA1E92BC5700CB59BF /* UIAlertControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */; };
+		47522C011EAE63D7008208F8 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473CBE521E9167960060CC68 /* Realm.framework */; };
+		47522C021EAE63D7008208F8 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473CBE531E9167960060CC68 /* RealmSwift.framework */; };
+		47522C061EAE64E2008208F8 /* PaymentListEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47522C051EAE64E2008208F8 /* PaymentListEntity.swift */; };
 		47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,12 +87,14 @@
 		47228E301E8EF30200C261F9 /* PaymentProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentProvider.swift; sourceTree = "<group>"; };
 		47228E321E8F02C200C261F9 /* AddPaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentViewController.swift; sourceTree = "<group>"; };
 		47228E351E8F06EA00C261F9 /* UIViewControllerExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExt.swift; sourceTree = "<group>"; };
+		47304F101EA90C0200398683 /* ArrayExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExt.swift; sourceTree = "<group>"; };
 		473CBE501E9130A30060CC68 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		473CBE521E9167960060CC68 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		473CBE531E9167960060CC68 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		473CBE561E9169990060CC68 /* SwiftyUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyUserDefaults.swift; sourceTree = "<group>"; };
 		473CBE581E916EA40060CC68 /* DictionaryExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryExt.swift; sourceTree = "<group>"; };
 		473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExt.swift; sourceTree = "<group>"; };
+		47522C051EAE64E2008208F8 /* PaymentListEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentListEntity.swift; sourceTree = "<group>"; };
 		47DC39DA1E9045620070AF1E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +103,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47522C011EAE63D7008208F8 /* Realm.framework in Frameworks */,
+				47522C021EAE63D7008208F8 /* RealmSwift.framework in Frameworks */,
 				47228E251E8ED21200C261F9 /* Alamofire.framework in Frameworks */,
 				47228E261E8ED21200C261F9 /* SwiftyJSON.framework in Frameworks */,
 			);
@@ -193,6 +201,7 @@
 				471C72031E8FE085000C2C39 /* StringExt.swift */,
 				471C72051E8FE08D000C2C39 /* DoubleExt.swift */,
 				473CBE581E916EA40060CC68 /* DictionaryExt.swift */,
+				47304F101EA90C0200398683 /* ArrayExt.swift */,
 				473EA5A91E92BC5700CB59BF /* UIAlertControllerExt.swift */,
 				471BDED51E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift */,
 			);
@@ -251,6 +260,7 @@
 				47228E1A1E8EBADD00C261F9 /* Payment.swift */,
 				47228E301E8EF30200C261F9 /* PaymentProvider.swift */,
 				473CBE501E9130A30060CC68 /* AppSettings.swift */,
+				47522C051EAE64E2008208F8 /* PaymentListEntity.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -400,6 +410,8 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
 			);
 			outputPaths = (
 			);
@@ -425,7 +437,9 @@
 				471C72041E8FE085000C2C39 /* StringExt.swift in Sources */,
 				47228E1D1E8EC02600C261F9 /* PaymentCell.swift in Sources */,
 				47228E1F1E8ECD4900C261F9 /* DictionaryMappable.swift in Sources */,
+				47304F111EA90C0200398683 /* ArrayExt.swift in Sources */,
 				471BDED61E9A837800FBB9C7 /* PickerLayerVC+Instantiation.swift in Sources */,
+				47522C061EAE64E2008208F8 /* PaymentListEntity.swift in Sources */,
 				47DC39DB1E9045620070AF1E /* SettingsTableViewController.swift in Sources */,
 				473CBE591E916EA40060CC68 /* DictionaryExt.swift in Sources */,
 				47228E331E8F02C200C261F9 /* AddPaymentViewController.swift in Sources */,

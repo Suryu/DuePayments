@@ -62,6 +62,8 @@ class PaymentsTableViewController: UIViewController {
         } else {
             doUpload()
         }
+        
+        print(path)
     }
     
     func refresh(_ sender:AnyObject) {
@@ -76,10 +78,28 @@ class PaymentsTableViewController: UIViewController {
 extension PaymentsTableViewController {
     
     func showAddPayment() {
+        
+        guard let payment = payment else {
+            return
+        }
+        
         let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
-        vc.path = path
+        vc.parentPath = path
         vc.actionType = .add
-        vc.callback = { [weak self] payment, parentPath in
+        
+        // PREPARE PARENTS
+        var parents: [PaymentParent] = []
+        // add currently selected parent payment
+        parents.append(PaymentParent.current(with: payment,
+                                             path: path))
+        // add all payments which were visible on the list when tapped ADD
+        payment.payments.forEach { parents.append(PaymentParent(id: $0.id,
+                                                                path: path.appending($0.id),
+                                                                displayedName: $0.displayName)) }
+        vc.availableParents = parents
+        // ----------------
+        
+        vc.action = { [weak self] payment, parentPath in
             guard let strongSelf = self else {
                 return
             }
@@ -89,17 +109,98 @@ extension PaymentsTableViewController {
                 return
             }
             
-            if parentPath.count > strongSelf.path.count && parentPayment.value > 0.0 {
-                // value was not 0 - move to subpayments with the same name
+            let wasMovedToChildPayment = (parentPath.count > strongSelf.path.count)
+            if wasMovedToChildPayment && parentPayment.value > 0.0 {
+                // value was not 0 - move to subpayments with the same name and value
+                var childPaymentFromParent = Payment.new()
+                childPaymentFromParent.name = parentPayment.name
+                childPaymentFromParent.value = parentPayment.value
+                
+                // change parent payment to have 0 value
                 var newParentPayment = parentPayment
                 newParentPayment.value = 0.0
-                var oldParentPayment = parentPayment
-                oldParentPayment.payments = []
                 
-                newParentPayment.payments.append(oldParentPayment)
+                newParentPayment.payments.append(childPaymentFromParent)
                 PaymentProvider.shared.root.replace(with: newParentPayment, atPath: parentPath)
             }
             PaymentProvider.shared.root.add(newPayment: payment, atPath: parentPath)
+            strongSelf.paymentsUpdated()
+            
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func showEditPayment(at index: Int) {
+        guard let payment = payment else {
+            return
+        }
+        var oldPath = path
+        oldPath.append(payment.payments[index].id)
+        
+        let paymentToEdit = payment.payments[index]
+        
+        let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
+        vc.parentPath = path
+        vc.actionType = .edit
+        vc.payment = paymentToEdit
+        
+        // PREPARE PARENTS
+        var parents: [PaymentParent] = []
+        // current item
+        parents.append(PaymentParent.current(with: payment,
+                                             path: path))
+        // move up
+        if !payment.isRoot {
+            let oneUpPath: [Int] = path.withoutLast()
+            if let oneUpPayment = PaymentProvider.shared.root.getPayment(atPath: oneUpPath) {
+                parents.append(PaymentParent.moveUp(with: oneUpPayment, path: oneUpPath))
+            }
+        }
+        // children
+        payment.payments.forEach {
+            if $0.id != paymentToEdit.id {
+                parents.append(PaymentParent(id: $0.id,
+                                             path: path.appending($0.id),
+                                             displayedName: $0.displayName))
+            }
+        }
+        vc.availableParents = parents
+        // ----------------
+        
+        vc.action = { [weak self] editedPayment, parentPath in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if parentPath == strongSelf.path {
+                PaymentProvider.shared.root.replace(with: editedPayment, atPath: oldPath)
+            } else {
+                PaymentProvider.shared.root.remove(atPath: oldPath)
+                
+                guard let parentPayment = PaymentProvider.shared.root.getPayment(atPath: parentPath) else {
+                    print("This payment does not exist!")
+                    return
+                }
+                
+                let wasMovedToChildPayment = (parentPath.count > strongSelf.path.count)
+                if wasMovedToChildPayment && parentPayment.value > 0.0 {
+                    // value was not 0 - move to subpayments with the same name and value
+                    var childPaymentFromParent = Payment.new()
+                    childPaymentFromParent.name = parentPayment.name
+                    childPaymentFromParent.value = parentPayment.value
+                    
+                    // change parent payment to have 0 value
+                    var newParentPayment = parentPayment
+                    newParentPayment.value = 0.0
+                    
+                    newParentPayment.payments.append(childPaymentFromParent)
+                    PaymentProvider.shared.root.replace(with: newParentPayment, atPath: parentPath)
+                }
+                
+                PaymentProvider.shared.root.add(newPayment: editedPayment, atPath: parentPath)
+            }
+            
             strongSelf.paymentsUpdated()
             
         }
@@ -122,61 +223,16 @@ extension PaymentsTableViewController {
         paymentsUpdated()
     }
     
-    func editItem(at index: Int) {
-        guard let payment = payment else {
-            return
-        }
-        var oldPath = path
-        oldPath.append(payment.payments[index].id)
-        
-        let vc = AddPaymentViewController.instantiate(storyboard: "Main", identifier: "AddPaymentViewController")
-        vc.path = path
-        vc.actionType = .edit
-        vc.editedPayment = payment.payments[index]
-        vc.callback = { [weak self] editedPayment, parentPath in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            if parentPath == strongSelf.path {
-                PaymentProvider.shared.root.replace(with: editedPayment, atPath: oldPath)
-            } else {
-                PaymentProvider.shared.root.remove(atPath: oldPath)
-                
-                guard let parentPayment = PaymentProvider.shared.root.getPayment(atPath: parentPath) else {
-                    print("This payment does not exist!")
-                    return
-                }
-                
-                if parentPath.count > strongSelf.path.count && parentPayment.value > 0.0 {
-                    // value was not 0 - move to subpayments with the same name
-                    var newParentPayment = parentPayment
-                    newParentPayment.value = 0.0
-                    var oldParentPayment = parentPayment
-                    oldParentPayment.payments = []
-                    
-                    newParentPayment.payments.append(oldParentPayment)
-                    PaymentProvider.shared.root.replace(with: newParentPayment, atPath: parentPath)
-                }
-                
-                PaymentProvider.shared.root.add(newPayment: editedPayment, atPath: parentPath)
-            }
-            
-            strongSelf.paymentsUpdated()
-            
-        }
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func fetchPayments(showIndicator: Bool = true, completion: ((SyncStatus) -> ())? = nil) {
         if showIndicator {
-            activityIndicator.startAnimating()
+            startBlockingActivity()
+            //activityIndicator.startAnimating()
         }
         
         PaymentProvider.shared.download() { [weak self] status in
             
-            self?.activityIndicator.stopAnimating()
+            self?.stopBlockingActivity()
+            //self?.activityIndicator.stopAnimating()
             self?.refreshControl.endRefreshing()
             
             if let msg = status.errorMessage {
@@ -327,6 +383,7 @@ extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSourc
             let vc = PaymentsTableViewController.instantiate(storyboard: "Main", identifier: "PaymentsTableViewController")
             vc.path = path
             vc.path.append(currentPayment.id)
+            vc.currentListId = currentListId
             print(vc.path)
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -349,7 +406,7 @@ extension PaymentsTableViewController: UITableViewDelegate, UITableViewDataSourc
             self?.deleteItem(at: paymentIdx)
         }
         let editItem = UITableViewRowAction(style: .normal, title: "Edit".localized) { [weak self] (action, indexPath) in
-            self?.editItem(at: paymentIdx)
+            self?.showEditPayment(at: paymentIdx)
         }
         return [deleteItem, editItem]
     }

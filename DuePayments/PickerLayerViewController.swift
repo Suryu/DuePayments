@@ -9,11 +9,25 @@
 import Foundation
 import UIKit
 
+struct PickerOption {
+    var title: String
+    var object: Any
+    var bolded: Bool
+    
+    init(title: String, object: Any, bolded: Bool = false) {
+        self.title = title
+        self.object = object
+        self.bolded = bolded
+    }
+}
+
 class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var pickerView: UIView!
     
-    var options: [String] = []
-    var callback: ((Int, String) -> ())?
+    // name: ID
+    var options: [PickerOption] = []
+    var defaultOptionIndex: Int?
+    var callback: ((Any) -> ())?
     
     @IBOutlet weak var picker: UIPickerView!
     
@@ -28,6 +42,10 @@ class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     override func viewWillAppear(_ animated: Bool) {
         pickerView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        
+        if let idx = defaultOptionIndex {
+            picker.selectRow(idx, inComponent: 0, animated: false)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -49,19 +67,23 @@ class PickerLayerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     //MARK: Delegates
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return options[row]
+        return options[row].title
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let pickerLabel = UILabel()
         pickerLabel.textColor = UIColor.black
-        pickerLabel.text = options[row]
-        // pickerLabel.font = UIFont(name: pickerLabel.font.fontName, size: 15)
-        pickerLabel.font = UIFont(name: pickerLabel.font.fontName, size: 14) // In this use your custom font
+        
+        let option = options[row]
+
+        let attrs = [NSFontAttributeName : option.bolded ? UIFont.boldSystemFont(ofSize: 16) : UIFont.systemFont(ofSize: 14)]
+        let attrText = NSMutableAttributedString(string: option.title, attributes:attrs)
+        pickerLabel.attributedText = attrText
         pickerLabel.textAlignment = .center
         return pickerLabel
     }
     @IBAction func okTapped(_ sender: Any) {
-        callback?(picker.selectedRow(inComponent: 0), options[picker.selectedRow(inComponent: 0)])
+        let row = picker.selectedRow(inComponent: 0)
+        callback?(options[row].object)
     }
 }
