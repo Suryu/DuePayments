@@ -54,19 +54,6 @@ struct Payment: DictionaryMappable {
     init() {        
     }
     
-    /*
-    init(name: String, value: Double) {
-        self.name = name
-        self.value = value
-        self.payments = []
-    }
-    
-    init(name: String, payments: [Payment]) {
-        self.name = name
-        self.value = 0.0
-        self.payments = payments
-    }*/
-    
     mutating func fromDictionary(_ dict: [String: Any]) {
         id <-- (dict["id"] ?? Payment.nextId())
         name <-- dict["name"]

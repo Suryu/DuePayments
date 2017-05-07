@@ -381,6 +381,9 @@
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                                            <connections>
+                                                                <action selector="listIdEntered:" destination="DS9-CV-MtT" eventType="editingDidEnd" id="Eag-UJ-nMy"/>
+                                                            </connections>
                                                         </textField>
                                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="200" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZyQ-Lb-oXs">
                                                             <rect key="frame" x="313" y="0.0" width="30" height="30"/>
@@ -485,6 +488,7 @@
                         <outlet property="autoUpdateSwitch" destination="8BG-01-m5d" id="F9k-OU-xbh"/>
                         <outlet property="lastUpdateInfo" destination="5EM-d8-OxZ" id="tl1-hN-gm2"/>
                         <outlet property="listIdTextField" destination="zfU-IO-DfA" id="52r-cE-yH3"/>
+                        <outlet property="manageListsButton" destination="yxh-Kb-fik" id="rJ5-8D-Ymc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gbe-H5-ORl" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -33,6 +33,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var listIdTextField: UITextField!
     @IBOutlet weak var lastUpdateInfo: UILabel!
     @IBOutlet weak var autoUpdateSwitch: UISwitch!
+    @IBOutlet weak var manageListsButton: UIButton!
     
     override func viewDidLoad() {
         tableView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.size.height, left: 0, bottom: 0, right: 0)
@@ -48,6 +49,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         
         loadSettings()
+        
+        manageListsButton.isEnabled = (AppSettings.shared.lists.count > 0)
     }
     
     func loadSettings() {
@@ -66,11 +69,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == listIdTextField {
-            if let listId = textField.text, textField.text != "" {
-                AppSettings.shared.listId = listId
-                AppSettings.shared.store()
-            }
-            
             textField.resignFirstResponder()
         }
         
@@ -95,6 +93,50 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             AppSettings.shared.addList(name: listName, listId: listId)
             AppSettings.shared.listId = listId
             AppSettings.shared.store()
+            
+            self?.manageListsButton.isEnabled = (AppSettings.shared.lists.count > 0)
+        }
+    }
+    
+    func inputAlert(title: String, message: String, placeholder: String, defaultText: String? = "", handler: @escaping (String) -> ()) -> UIAlertController {
+
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        
+        let addAction = UIAlertAction(title: "OK", style: .default, handler: { _ in handler(alert.textFields?.first?.text ?? "") })
+        let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+        
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
+        
+        alert.addTextField(configurationHandler: { textField in
+            textField.clearButtonMode = .whileEditing
+            textField.text = defaultText
+            textField.placeholder = placeholder
+        })
+        
+        return alert
+    }
+    
+    @IBAction func listIdEntered(_ sender: UITextField) {
+        if let listId = sender.text, sender.text != "" {
+            AppSettings.shared.listId = listId
+            
+            let lists = AppSettings.shared.lists
+            if !lists.contains { $0.listID == listId } {
+                
+                let inputHandler = { listName in
+                    AppSettings.shared.addList(name: listName, listId: listId)
+                }
+                
+                inputAlert(title: "NewList".localized,
+                           message: "EnterListName".localized,
+                           placeholder: "ListNamePlaceholder".localized,
+                           defaultText: "\("List".localized) \(AppSettings.shared.lists.count + 1)",
+                    handler: inputHandler).present()
+            }
+            AppSettings.shared.store()
         }
     }
 }
@@ -114,25 +156,15 @@ extension SettingsTableViewController {
     
     @IBAction func createNewListTapped(_ sender: UIButton) {
         
-        let alert = UIAlertController(title: "NewList".localized,
-                                      message: "EnterListName".localized,
-                                      preferredStyle: .alert)
+        let inputHandler: (String) -> () = { [weak self] listName in
+            self?.createNewList(name: listName)
+        }
         
-        let addAction = UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
-            self?.createNewList(name: alert.textFields?.first?.text)
-        })
-        let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
-        
-        alert.addAction(addAction)
-        alert.addAction(cancelAction)
-        
-        alert.addTextField(configurationHandler: { textField in
-            textField.clearButtonMode = .whileEditing
-            textField.text = "\("List".localized) \(AppSettings.shared.lists.count + 1)"
-            textField.placeholder = "ListNamePlaceholder".localized
-        })
-        
-        alert.present()
+        inputAlert(title: "NewList".localized,
+                   message: "EnterListName".localized,
+                   placeholder: "ListNamePlaceholder".localized,
+                   defaultText: "\("List".localized) \(AppSettings.shared.lists.count + 1)",
+            handler: inputHandler).present()
     }
     
     @IBAction func ManageListsTapped(_ sender: UIButton) {
