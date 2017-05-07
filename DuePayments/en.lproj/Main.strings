@@ -23,26 +23,41 @@
 /* Class = "UILabel"; text = "Name"; ObjectID = "u6r-sh-h53"; */
 "u6r-sh-h53.text" = "Name";
 
+// Add payment button
 "Ccm-6b-ygb.normalTitle" = "Choose";
 
+// PICKER
 "YZ7-SH-u8u.normalTitle" = "Choose";
 
-"Au1-tq-eXh.title" = "Settings";
+// -- Settings
 
-"pYm-YZ-MHC.headerTitle" = "Settings";
+// Section header: LIST
+"U4E-9Q-F0C.headerTitle" = "List";
+// Active list label
+"N09-Ux-KmI.text" = "Active list:";
+// Change button
+"yxh-Kb-fik.normalTitle" = "Change";
+// Identifier label (default)
+"rCp-E0-wQx.text" = "Identifier: ?";
+// Option: NEW
+"pRU-MD-6AS.normalTitle" = "New";
+// Option: ADD
+"kPt-8T-ads.normalTitle" = "Add";
+// Option: RENAME
+"zml-lL-F2a.normalTitle" = "Rename";
+// Option: REMOVE
+"6Av-bz-997.normalTitle" = "Remove";
 
-"3zh-Kb-f04.headerTitle" = "Author: Paweł Wojtkowiak";
-"3zh-Kb-f04.footerTitle" = "Icons provided by Icons8.com";
-
+// Section header: GENERAL
+"pYm-YZ-MHC.headerTitle" = "General";
+// Update payments after each change label
 "eYW-WV-xkq.text" = "Update payments on the server after each change";
 
-"N09-Ux-KmI.text" = "List identifier";
+// Section header: ABOUT
+"3zh-Kb-f04.headerTitle" = "About";
+"ox9-tE-CJd.text" = "Author: Paweł Wojtkowiak";
+"mDr-TO-xqc.text" = "Icons provided by Icons8.com";
 
-"zfU-IO-DfA.placeholder" = "Identifier";
-
-"pRU-MD-6AS.normalTitle" = "Create new list";
-
-"yxh-Kb-fik.normalTitle" = "Manage lists";
-
+// Tab bar items' captions
 "asx-nV-Bv3.title" = "Payments";
 "Au1-tq-eXh.title" = "Settings";

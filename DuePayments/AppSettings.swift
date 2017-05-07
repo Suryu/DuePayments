@@ -47,6 +47,16 @@ final class AppSettings {
         loadLists()
     }
     
+    func renameCurrentList(newName: String) {
+        PaymentListsModel.shared.rename(withID: listId, newName: newName)
+        loadLists()
+    }
+    
+    func removeCurrentList() {
+        PaymentListsModel.shared.delete(withID: listId)
+        loadLists()
+    }
+    
     func store() {
         generalSettings.store()
         

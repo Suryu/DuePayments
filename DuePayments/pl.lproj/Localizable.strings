@@ -36,3 +36,19 @@
 "ListNamePlaceholder" = "Podaj nazwę listy";
 "Current" = "Bieżący";
 "Move up" = "Przenieś wyżej";
+
+"AddList" = "Dodaj listę";
+"AddListMessage" = "Podaj identyfikator i nazwę listy:";
+"AddListIDPlaceholder" = "Identyfikator";
+"AddListNamePlaceholder" = "Nazwa";
+"List already exists with name" = "Lista już istnieje pod nazwą";
+
+"Rename" = "Zmień nazwę";
+"RenameMessage" = "Podaj nową nazwę dla listy";
+
+"AreYouSure" = "Jesteś pewien?";
+"WillRemoveList" = "Czy na pewno usunąć listę o nazwie";
+
+"Yes" = "Tak";
+"No" = "Nie";
+"Identifier" = "Identyfikator";

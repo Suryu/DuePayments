@@ -35,3 +35,19 @@
 "ListNamePlaceholder" = "Enter list name";
 "Current" = "Current";
 "Move up" = "Move up";
+
+"AddList" = "Add list";
+"AddListMessage" = "Enter list identifier and name:";
+"AddListIDPlaceholder" = "Identifier";
+"AddListNamePlaceholder" = "Name";
+"List already exists with name" = "List already exists with name";
+
+"Rename" = "Rename";
+"RenameMessage" = "Enter new name for the list";
+
+"AreYouSure" = "Are you sure?";
+"WillRemoveList" = "Are you sure you want to remove list with name";
+
+"Yes" = "Yes";
+"No" = "No";
+"Identifier" = "Identifier";

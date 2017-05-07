@@ -20,29 +20,41 @@
 /* Class = "UITextField"; placeholder = "Enter payment name"; ObjectID = "pJe-Er-kOH"; */
 "pJe-Er-kOH.placeholder" = "Podaj nazwę płatności";
 
-/* Class = "UILabel"; text = "Name"; ObjectID = "u6r-sh-h53"; */
-"u6r-sh-h53.text" = "Nazwa";
-
+// Add payment button
 "Ccm-6b-ygb.normalTitle" = "Wybierz";
 
+// PICKER
 "YZ7-SH-u8u.normalTitle" = "Wybierz";
 
-"Au1-tq-eXh.title" = "Ustawienia";
+// -- Settings
 
-"pYm-YZ-MHC.headerTitle" = "Ustawienia";
+// Section header: LIST
+"U4E-9Q-F0C.headerTitle" = "Lista";
+// Active list label
+"N09-Ux-KmI.text" = "Aktywna lista:";
+// Change button
+"yxh-Kb-fik.normalTitle" = "Zmień";
+// Identifier label (default)
+"rCp-E0-wQx.text" = "Identyfikator: ?";
+// Option: NEW
+"pRU-MD-6AS.normalTitle" = "Nowa";
+// Option: ADD
+"kPt-8T-ads.normalTitle" = "Dodaj";
+// Option: RENAME
+"zml-lL-F2a.normalTitle" = "Zmień nazwę";
+// Option: REMOVE
+"6Av-bz-997.normalTitle" = "Usuń";
 
-"3zh-Kb-f04.headerTitle" = "Autor: Paweł Wojtkowiak";
-"3zh-Kb-f04.footerTitle" = "Ikony dostarczone przez Icons8.com";
-
+// Section header: GENERAL
+"pYm-YZ-MHC.headerTitle" = "Ogólne";
+// Update payments after each change label
 "eYW-WV-xkq.text" = "Aktualizuj płatności na serwerze po każdej zmianie";
 
-"N09-Ux-KmI.text" = "Identyfikator listy";
+// Section header: ABOUT
+"3zh-Kb-f04.headerTitle" = "O programie";
+"ox9-tE-CJd.text" = "Autor: Paweł Wojtkowiak";
+"mDr-TO-xqc.text" = "Ikony dostarczone przez Icons8.com";
 
-"zfU-IO-DfA.placeholder" = "Identyfikator";
-
-"pRU-MD-6AS.normalTitle" = "Utwórz nową listę";
-
-"yxh-Kb-fik.normalTitle" = "Zarządzaj listami";
-
+// Tab bar items' captions
 "asx-nV-Bv3.title" = "Płatności";
 "Au1-tq-eXh.title" = "Ustawienia";

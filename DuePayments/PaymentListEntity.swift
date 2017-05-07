@@ -34,6 +34,24 @@ class PaymentListsModel {
         self.currentOrderID = currentOrderID + 1
     }
     
+    func rename(withID listID: String, newName: String) {
+        if let list = load().first(where: { $0.listID == listID }) {
+            let realm = try! Realm()
+            try! realm.write {
+                list.name = newName
+            }
+        }
+    }
+    
+    func delete(withID listID: String) {
+        if let list = load().first(where: { $0.listID == listID }) {
+            let realm = try! Realm()
+            try! realm.write {
+                realm.delete(list)
+            }
+        }
+    }
+    
     func load() -> [PaymentListEntity] {
         let realm = try! Realm()
         let objects = Array(realm.objects(PaymentListEntity.self))
